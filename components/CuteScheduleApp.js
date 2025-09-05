@@ -574,75 +574,177 @@ export default function CuteScheduleApp() {
     }}>
       {/* Cute Gradient Background */}
       <CuteGradientBackground />
-      {/* Header */}
-      <header style={{
-        backgroundColor: `${theme.colors.background}F0`,
-        backdropFilter: 'blur(20px)',
-        borderBottom: `1px solid ${theme.colors.primary}20`,
-        padding: '1rem 1.5rem',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        position: 'relative',
-        zIndex: 10
+      {/* Floating Header */}
+      <div style={{
+        position: 'fixed',
+        top: '1rem',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 50,
+        width: '100%',
+        maxWidth: '512px',
+        padding: '0 1rem'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            style={{
-              padding: '0.5rem',
-              border: 'none',
-              background: `${theme.colors.primary}20`,
-              borderRadius: '0.5rem',
-              cursor: 'pointer',
-              display: isMobile ? 'block' : 'none',
-              color: theme.colors.primary
-            }}
-          >
-            ☰
-          </button>
-          <h1 style={{ 
-            fontSize: '1.5rem', 
-            fontWeight: 'bold', 
-            margin: 0,
-            color: theme.colors.textPrimary,
-            textShadow: `0 2px 4px ${theme.colors.primary}20`
-          }}>
-            Cute Schedule
-          </h1>
-        </div>
-        <button style={{
-          padding: '0.5rem 1rem',
-          backgroundColor: theme.colors.primary,
-          color: theme.colors.background,
-          border: 'none',
-          borderRadius: '0.5rem',
-          cursor: 'pointer',
-          fontWeight: '500',
-          boxShadow: `0 2px 8px ${theme.colors.primary}40`
+        <div style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '9999px',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+          transition: 'all 0.3s ease'
         }}>
-          Today's Goals
-        </button>
-      </header>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0.75rem 1.5rem'
+          }}>
+            {/* App Name */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{
+                width: '32px',
+                height: '32px',
+                background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <span style={{
+                  color: 'white',
+                  fontSize: '0.875rem',
+                  fontWeight: 'bold'
+                }}>CS</span>
+              </div>
+              <h1 style={{
+                color: 'white',
+                fontWeight: '600',
+                fontSize: '1.125rem',
+                margin: 0,
+                textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                display: isMobile ? 'none' : 'block'
+              }}>
+                Cute Schedule
+              </h1>
+            </div>
 
-      <div style={{ display: 'flex', minHeight: 'calc(100vh - 73px)' }}>
+            {/* Search Bar */}
+            <div style={{ flex: 1, maxWidth: '300px', margin: '0 1rem' }}>
+              <div style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <input
+                  type="text"
+                  placeholder="Search schedules..."
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 1rem 0.5rem 2.5rem',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '9999px',
+                    color: 'white',
+                    fontSize: '0.875rem',
+                    outline: 'none',
+                    backdropFilter: 'blur(10px)'
+                  }}
+                />
+                <div style={{
+                  position: 'absolute',
+                  left: '0.75rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: 'rgba(255, 255, 255, 0.6)'
+                }}>
+                  🔍
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              {/* Sidebar Toggle */}
+              <button 
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  border: 'none',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  color: 'white',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                  fontSize: '1.2rem'
+                }}
+                title={sidebarOpen ? 'Close Sidebar' : 'Open Sidebar'}
+              >
+                {sidebarOpen ? '✕' : '☰'}
+              </button>
+              
+              {/* Theme Toggle */}
+              <button style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                border: 'none',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                color: 'white',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.3s ease'
+              }}>
+                🌙
+              </button>
+              
+              {/* User Button */}
+              <button style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                border: 'none',
+                background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                color: 'white',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                transition: 'all 0.3s ease'
+              }}>
+                👤
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', minHeight: '100vh', paddingTop: '5rem' }}>
         {/* Sidebar */}
         <aside style={{
-          width: '256px',
-          backgroundColor: `${theme.colors.background}F5`,
+          width: sidebarOpen ? '256px' : '0px',
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
           backdropFilter: 'blur(15px)',
-          borderRight: `1px solid ${theme.colors.primary}20`,
-          padding: '1rem',
-          position: isMobile ? 'fixed' : 'static',
+          borderRight: sidebarOpen ? '1px solid rgba(255, 255, 255, 0.2)' : 'none',
+          padding: sidebarOpen ? '5rem 1rem 1rem 1rem' : '0',
+          position: 'fixed',
           left: 0,
-          top: '73px',
-          height: isMobile ? 'calc(100vh - 73px)' : 'auto',
-          zIndex: 50,
-          transform: isMobile && !sidebarOpen ? 'translateX(-100%)' : 'translateX(0)',
-          transition: 'transform 0.3s ease'
+          top: '0',
+          height: '100vh',
+          zIndex: 40,
+          transform: !sidebarOpen ? 'translateX(-100%)' : 'translateX(0)',
+          transition: 'all 0.3s ease',
+          overflow: 'hidden'
         }}>
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ fontSize: '0.75rem', fontWeight: '600', color: theme.colors.textSecondary, marginBottom: '0.75rem', textTransform: 'uppercase' }}>
+            <h3 style={{ fontSize: '0.75rem', fontWeight: '600', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>
               Main
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
@@ -727,7 +829,9 @@ export default function CuteScheduleApp() {
           position: 'relative', 
           zIndex: 1,
           overflowY: 'auto',
-          maxHeight: 'calc(100vh - 73px)'
+          maxHeight: 'calc(100vh - 5rem)',
+          transition: 'margin-left 0.3s ease',
+          marginLeft: !isMobile && !sidebarOpen ? '0' : '0'
         }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
             {/* Welcome */}
