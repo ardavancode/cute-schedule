@@ -1,8 +1,9 @@
 'use client';
 
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import Sidebar from '../../components/layout/Sidebar';
 import { MenuIcon } from '../../components/ui/Icons';
 
 const HomeButtonIcon = () => (
@@ -117,6 +118,12 @@ const PencilIcon = () => (
 
 const filters = ['All Ideas', 'Work', 'Personal', 'Inspiration'];
 
+const sidebarPalette = {
+  emerald: '#037971',
+  deepTeal: '#214E5D',
+  sapphire: '#275DAD',
+};
+
 type Idea = {
   id: number;
   name: string;
@@ -127,6 +134,9 @@ type Idea = {
 
 export default function IdeasPage() {
   const router = useRouter();
+  const pathname = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [layoutMode, setLayoutMode] = useState<'grid' | 'list'>('grid');
@@ -136,6 +146,27 @@ export default function IdeasPage() {
   const [ideaDescription, setIdeaDescription] = useState('');
   const [ideaTags, setIdeaTags] = useState('');
   const [ideas, setIdeas] = useState<Idea[]>([]);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      if (mobile) {
+        setSidebarOpen(false);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleNavigate = (path: string) => {
+    router.push(path);
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  };
 
   const searchPanelStyles = {
     maxHeight: isSearchOpen ? '120px' : '0px',
@@ -400,41 +431,18 @@ export default function IdeasPage() {
         paddingBottom: '6rem',
       }}
     >
-      <Link
-        href="/"
-        style={{
-          position: 'absolute',
-          top: '1.25rem',
-          right: '1.25rem',
-          width: '48px',
-          height: '48px',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#214E5D',
-          background: 'rgba(255, 255, 255, 0.85)',
-          boxShadow: '0 10px 24px rgba(33, 78, 93, 0.25)',
-          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-        }}
-        onMouseEnter={(e) => {
-          const target = e.currentTarget;
-          target.style.transform = 'scale(1.05)';
-          target.style.boxShadow = '0 14px 32px rgba(33, 78, 93, 0.28)';
-        }}
-        onMouseLeave={(e) => {
-          const target = e.currentTarget;
-          target.style.transform = 'scale(1)';
-          target.style.boxShadow = '0 10px 24px rgba(33, 78, 93, 0.25)';
-        }}
-        aria-label="Back to home"
-      >
-        <HomeButtonIcon />
-      </Link>
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        isMobile={isMobile}
+        onNavigate={handleNavigate}
+        activePath={pathname}
+        palette={sidebarPalette}
+      />
 
       <button
         type="button"
-        onClick={() => router.push('/')}
+        onClick={() => setSidebarOpen((prev) => !prev)}
         style={{
           position: 'absolute',
           top: '1.25rem',
@@ -451,6 +459,7 @@ export default function IdeasPage() {
           boxShadow: '0 10px 24px rgba(33, 78, 93, 0.25)',
           cursor: 'pointer',
           transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+          zIndex: 60,
         }}
         onMouseEnter={(event) => {
           const target = event.currentTarget;
@@ -462,80 +471,123 @@ export default function IdeasPage() {
           target.style.transform = 'scale(1)';
           target.style.boxShadow = '0 10px 24px rgba(33, 78, 93, 0.25)';
         }}
-        aria-label="Open sidebar"
+        aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
       >
         <MenuIcon size={20} className="" style={{}} />
       </button>
 
       <div
         style={{
-          paddingTop: '0.2rem',
-          textAlign: 'center',
-          color: 'rgba(255, 255, 255, 0.92)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '0.85rem',
+          marginLeft: !isMobile && sidebarOpen ? '260px' : '0',
+          transition: 'margin-left 0.3s ease',
+          width: '100%',
+          position: 'relative',
         }}
       >
-        <h1
+        <Link
+          href="/"
           style={{
-            margin: 0,
-            fontSize: '3rem',
-            fontWeight: 700,
-            letterSpacing: '0.04em',
-          }}
-        >
-          Idea Book
-        </h1>
-        <p
-          style={{
-            margin: 0,
-            fontSize: '1rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.35em',
-            color: 'rgba(255, 255, 255, 0.75)',
-          }}
-        >
-          think • write • rise
-        </p>
-        <button
-          type="button"
-          onClick={openModal}
-          style={{
-            width: '200px',
-            height: '72px',
-            borderRadius: '9999px',
-            border: 'none',
+            position: 'absolute',
+            top: '1.25rem',
+            right: isMobile ? '1.25rem' : '2.5rem',
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '1.05rem',
-            fontWeight: 600,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            color: '#BDEDE0',
-            backgroundImage: 'linear-gradient(135deg, #214E5D 0%, #275DAD 100%)',
-            backgroundSize: '220% 220%',
-            animation: 'ideaButtonPulse 6s ease-in-out infinite',
-            boxShadow: '0 18px 36px rgba(11, 10, 7, 0.28)',
-            cursor: 'pointer',
+            color: '#214E5D',
+            background: 'rgba(255, 255, 255, 0.85)',
+            boxShadow: '0 10px 24px rgba(33, 78, 93, 0.25)',
+            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+            zIndex: 60,
+          }}
+          onMouseEnter={(e) => {
+            const target = e.currentTarget;
+            target.style.transform = 'scale(1.05)';
+            target.style.boxShadow = '0 14px 32px rgba(33, 78, 93, 0.28)';
+          }}
+          onMouseLeave={(e) => {
+            const target = e.currentTarget;
+            target.style.transform = 'scale(1)';
+            target.style.boxShadow = '0 10px 24px rgba(33, 78, 93, 0.25)';
+          }}
+          aria-label="Back to home"
+        >
+          <HomeButtonIcon />
+        </Link>
+
+        <div
+          style={{
+            paddingTop: '0.2rem',
+            textAlign: 'center',
+            color: 'rgba(255, 255, 255, 0.92)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.85rem',
           }}
         >
-          Add Idea
-        </button>
-      </div>
+          <h1
+            style={{
+              margin: 0,
+              fontSize: '3rem',
+              fontWeight: 700,
+              letterSpacing: '0.04em',
+            }}
+          >
+            Idea Book
+          </h1>
+          <p
+            style={{
+              margin: 0,
+              fontSize: '1rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.35em',
+              color: 'rgba(255, 255, 255, 0.75)',
+            }}
+          >
+            think • write • rise
+          </p>
+          <button
+            type="button"
+            onClick={openModal}
+            style={{
+              width: '200px',
+              height: '72px',
+              borderRadius: '9999px',
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.05rem',
+              fontWeight: 600,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: '#BDEDE0',
+              backgroundImage: 'linear-gradient(135deg, #214E5D 0%, #275DAD 100%)',
+              backgroundSize: '220% 220%',
+              animation: 'ideaButtonPulse 6s ease-in-out infinite',
+              boxShadow: '0 18px 36px rgba(11, 10, 7, 0.28)',
+              cursor: 'pointer',
+            }}
+          >
+            Add Idea
+          </button>
+        </div>
 
-      <section
-        style={{
-          width: '100%',
-          maxWidth: '960px',
-          marginTop: '100px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1.75rem',
-        }}
-      >
+        <section
+          style={{
+            width: '100%',
+            maxWidth: '960px',
+            marginTop: '100px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.75rem',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}
+        >
         <header
           style={{
             display: 'flex',
@@ -718,6 +770,8 @@ export default function IdeasPage() {
           )}
         </div>
       </section>
+
+      </div>
 
       {isModalVisible && (
         <div

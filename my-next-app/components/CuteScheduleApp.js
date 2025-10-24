@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { theme } from '../styles/theme';
 import CuteGlowCard from './ui/CuteGlowCard';
-import { BookIcon, WorkIcon, QuestionIcon, MenuIcon } from './ui/Icons';
+import Header from './layout/Header';
+import Sidebar from './layout/Sidebar';
+import { BookIcon, WorkIcon, QuestionIcon } from './ui/Icons';
 
 const palette = {
   emerald: '#037971',
@@ -349,6 +351,7 @@ export default function CuteScheduleApp() {
     { id: 2, title: 'Weekend project', date: '2024-01-14' }
   ]);
   const router = useRouter();
+  const pathname = usePathname();
   const [workItems, setWorkItems] = useState([
     { id: 1, title: 'Complete landing page', status: 'in-progress' },
     { id: 2, title: 'Review code changes', status: 'todo' }
@@ -389,39 +392,16 @@ export default function CuteScheduleApp() {
     setWorkItems([...workItems, newItem]);
   };
 
-  const iconButtonStyle = (active = false) => ({
-    width: isMobile ? '36px' : '42px',
-    height: isMobile ? '36px' : '42px',
-    borderRadius: '9999px',
-    border: '1px solid rgba(33, 78, 93, 0.22)',
-    background: active
-      ? 'linear-gradient(145deg, rgba(3, 121, 113, 0.28) 0%, rgba(39, 93, 173, 0.32) 100%)'
-      : 'rgba(212, 245, 245, 0.92)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: palette.deepTeal,
-    cursor: 'pointer',
-    transform: 'translateY(0)',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease',
-    boxShadow: active
-      ? '0 18px 38px rgba(32, 78, 93, 0.28)'
-      : '0 12px 28px rgba(33, 78, 93, 0.18)'
-  });
-
-  const resetIconButtonStyle = (element, active = false) => {
-    if (!element) return;
-    const base = iconButtonStyle(active);
-    Object.entries(base).forEach(([property, value]) => {
-      element.style[property] = value;
-    });
-  };
-
   const headerActions = [
     { label: 'Search schedule', Icon: SearchIcon },
     { label: 'Daily planner', Icon: PlannerIcon },
     { label: 'Notifications', Icon: BellIcon }
   ];
+
+  const handleNavigate = (path) => {
+    router.push(path);
+    setSidebarOpen(false);
+  };
 
   return (
     <div style={{ 
@@ -433,306 +413,23 @@ export default function CuteScheduleApp() {
       {/* Cute Gradient Background */}
       <CuteGradientBackground />
       {/* Floating Header */}
-      <div
-        style={{
-          position: 'fixed',
-          top: isMobile ? '0.75rem' : '1rem',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 50,
-          width: '100%',
-          maxWidth: isMobile ? '560px' : '720px',
-          padding: isMobile ? '0 0.75rem' : '0 1rem'
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: isMobile ? '0.75rem' : '1.25rem',
-            padding: isMobile ? '0.75rem 1rem' : '0.9rem 1.5rem',
-            borderRadius: '26px',
-            border: '1px solid rgba(3, 121, 113, 0.18)',
-            background: 'linear-gradient(125deg, rgba(212, 245, 245, 0.9) 0%, rgba(240, 234, 214, 0.92) 55%, rgba(39, 93, 173, 0.22) 100%)',
-            boxShadow: '0 28px 52px rgba(3, 121, 113, 0.25)',
-            backdropFilter: 'blur(28px)',
-            transition: 'box-shadow 0.3s ease'
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: isMobile ? '0.6rem' : '0.85rem'
-            }}
-          >
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              type="button"
-              aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
-              style={iconButtonStyle(sidebarOpen)}
-              onMouseEnter={(event) => {
-                event.currentTarget.style.transform = 'translateY(-2px)';
-                event.currentTarget.style.boxShadow = '0 20px 40px rgba(3, 121, 113, 0.3)';
-              }}
-              onMouseLeave={(event) => resetIconButtonStyle(event.currentTarget, sidebarOpen)}
-            >
-              {sidebarOpen ? (
-                <span style={{ fontSize: '1rem', fontWeight: 600, lineHeight: 1 }}>×</span>
-              ) : (
-                <MenuIcon size={isMobile ? 16 : 18} />
-              )}
-            </button>
-
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: isMobile ? '0.55rem' : '0.75rem'
-              }}
-            >
-              <span
-                style={{
-                  width: isMobile ? '36px' : '42px',
-                  height: isMobile ? '36px' : '42px',
-                  borderRadius: '14px',
-                  background: `linear-gradient(140deg, ${palette.emerald} 0%, ${palette.sapphire} 100%)`,
-                  color: '#FFFFFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: isMobile ? '0.8rem' : '0.9rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  boxShadow: '0 16px 32px rgba(3, 121, 113, 0.35)'
-                }}
-              >
-                CS
-              </span>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.2rem'
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: isMobile ? '1rem' : '1.25rem',
-                    fontWeight: 600,
-                    color: theme.colors.textPrimary,
-                    margin: 0
-                  }}
-                >
-                  Cute Schedule
-                </span>
-                {!isMobile && (
-                  <span
-                    style={{
-                      fontSize: '0.7rem',
-                      letterSpacing: '0.18em',
-                      textTransform: 'uppercase',
-                      color: 'rgba(33, 78, 93, 0.66)'
-                    }}
-                  >
-                    plan · focus · glow
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: isMobile ? '0.6rem' : '0.75rem'
-            }}
-          >
-            {headerActions.map(({ label, Icon }) => (
-              <button
-                key={label}
-                type="button"
-                aria-label={label}
-                style={iconButtonStyle(false)}
-                onMouseEnter={(event) => {
-                  event.currentTarget.style.transform = 'translateY(-2px)';
-                  event.currentTarget.style.boxShadow = '0 18px 38px rgba(32, 78, 93, 0.28)';
-                }}
-                onMouseLeave={(event) => resetIconButtonStyle(event.currentTarget)}
-              >
-                <Icon size={isMobile ? 16 : 18} />
-              </button>
-            ))}
-
-            <button
-              type="button"
-              aria-label="Toggle theme"
-              style={iconButtonStyle(false)}
-              onMouseEnter={(event) => {
-                event.currentTarget.style.transform = 'translateY(-2px)';
-                event.currentTarget.style.boxShadow = '0 18px 38px rgba(32, 78, 93, 0.28)';
-              }}
-              onMouseLeave={(event) => resetIconButtonStyle(event.currentTarget)}
-            >
-              <MoonIcon size={isMobile ? 16 : 18} />
-            </button>
-
-            <button
-              type="button"
-              aria-label="View profile"
-              style={{
-                width: isMobile ? '36px' : '42px',
-                height: isMobile ? '36px' : '42px',
-                borderRadius: '50%',
-                border: '1px solid rgba(3, 121, 113, 0.18)',
-                background: `linear-gradient(145deg, ${palette.emerald} 0%, ${palette.sapphire} 100%)`,
-                color: '#FFFFFF',
-                fontWeight: 600,
-                letterSpacing: '0.05em',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                transform: 'translateY(0)',
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                boxShadow: '0 18px 32px rgba(3, 121, 113, 0.35)'
-              }}
-              onMouseEnter={(event) => {
-                event.currentTarget.style.transform = 'translateY(-2px)';
-                event.currentTarget.style.boxShadow = '0 22px 38px rgba(39, 93, 173, 0.42)';
-              }}
-              onMouseLeave={(event) => {
-                event.currentTarget.style.transform = 'translateY(0)';
-                event.currentTarget.style.boxShadow = '0 18px 32px rgba(3, 121, 113, 0.35)';
-              }}
-            >
-              YOU
-            </button>
-          </div>
-        </div>
-      </div>
+      <Header
+        isMobile={isMobile}
+        sidebarOpen={sidebarOpen}
+        onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+        headerActions={headerActions}
+        palette={palette}
+      />
 
       <div style={{ display: 'flex', minHeight: '100vh', paddingTop: '5rem' }}>
-        {/* Sidebar */}
-        <aside style={{
-          width: sidebarOpen ? '256px' : '0px',
-          background: 'linear-gradient(185deg, rgba(3, 121, 113, 0.26) 0%, rgba(33, 78, 93, 0.32) 55%, rgba(39, 93, 173, 0.25) 100%)',
-          backdropFilter: 'blur(24px)',
-          borderRight: sidebarOpen ? '1px solid rgba(3, 121, 113, 0.28)' : 'none',
-          padding: sidebarOpen ? '5rem 1rem 1rem 1rem' : '0',
-          position: 'fixed',
-          left: 0,
-          top: '0',
-          height: '100vh',
-          zIndex: 40,
-          transform: !sidebarOpen ? 'translateX(-100%)' : 'translateX(0)',
-          transition: 'all 0.3s ease',
-          overflow: 'hidden'
-        }}>
-          <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ fontSize: '0.75rem', fontWeight: '600', color: 'rgba(240, 234, 214, 0.85)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
-              Main
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              <button
-                onClick={() => {
-                  router.push('/');
-                  setSidebarOpen(false);
-                }}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  padding: '0.5rem 0.75rem',
-                  background: 'rgba(212, 245, 245, 0.15)',
-                  color: 'rgba(240, 234, 214, 0.95)',
-                  border: '1px solid rgba(3, 121, 113, 0.25)',
-                  borderRadius: '0.75rem',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  boxShadow: '0 12px 28px rgba(3, 121, 113, 0.25)',
-                  transition: 'transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease'
-                }}
-              >
-                🏠 Dashboard
-              </button>
-              <button
-                onClick={() => {
-                  router.push('/ideas');
-                  setSidebarOpen(false);
-                }}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  padding: '0.5rem 0.75rem',
-                  background: 'rgba(240, 234, 214, 0.12)',
-                  color: 'rgba(240, 234, 214, 0.92)',
-                  border: '1px solid rgba(3, 121, 113, 0.18)',
-                  borderRadius: '0.75rem',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  boxShadow: '0 10px 24px rgba(3, 121, 113, 0.18)',
-                  transition: 'transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease'
-                }}
-              >
-                📖 Idea Book
-              </button>
-              <button
-                onClick={() => {
-                  router.push('/work');
-                  setSidebarOpen(false);
-                }}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  padding: '0.5rem 0.75rem',
-                  background: 'rgba(240, 234, 214, 0.12)',
-                  color: 'rgba(240, 234, 214, 0.92)',
-                  border: '1px solid rgba(3, 121, 113, 0.18)',
-                  borderRadius: '0.75rem',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  boxShadow: '0 10px 24px rgba(3, 121, 113, 0.18)',
-                  transition: 'transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease'
-                }}
-              >
-                💼 Work Desk
-              </button>
-            </div>
-          </div>
-
-          <div>
-            <h3 style={{ fontSize: '0.75rem', fontWeight: '600', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>
-              Tools
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              {['⏰ Timer', '📝 Notes', '📅 Calendar'].map(tool => (
-                <button key={tool} style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  padding: '0.5rem 0.75rem',
-                  backgroundColor: 'transparent',
-                  color: '#374151',
-                  border: 'none',
-                  borderRadius: '0.5rem',
-                  cursor: 'pointer',
-                  textAlign: 'left'
-                }}>
-                  {tool}
-                </button>
-              ))}
-            </div>
-          </div>
-        </aside>
+        <Sidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          isMobile={isMobile}
+          onNavigate={handleNavigate}
+          activePath={pathname}
+          palette={palette}
+        />
 
         {/* Main Content */}
         <main style={{ 
@@ -748,27 +445,6 @@ export default function CuteScheduleApp() {
           <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
             {/* Welcome */}
             <div style={{ textAlign: 'center', marginBottom: '3rem', position: 'relative', zIndex: 10 }}>
-              <h1 style={{ 
-                fontSize: '2.5rem', 
-                fontWeight: 'bold', 
-                marginBottom: '1rem', 
-                margin: 0,
-                background: `linear-gradient(135deg, ${palette.mist} 0%, ${palette.emerald} 40%, ${palette.sapphire} 100%)`,
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                color: 'transparent',
-                textShadow: '0 4px 8px rgba(3, 121, 113, 0.2)'
-              }}>
-                Welcome to Cute Schedule ✨
-              </h1>
-              <p style={{ 
-                color: 'rgba(240, 234, 214, 0.85)', 
-                margin: 0,
-                fontSize: '1.05rem',
-                textShadow: '0 2px 6px rgba(3, 121, 113, 0.25)'
-              }}>
-                Organize your ideas and get work done beautifully
-              </p>
             </div>
 
             {/* Cards */}
