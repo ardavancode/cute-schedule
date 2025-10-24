@@ -1,7 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { theme } from '../styles/theme';
+import CuteGlowCard from './ui/CuteGlowCard';
+import { BookIcon, WorkIcon, QuestionIcon, MenuIcon } from './ui/Icons';
 
 // Utility function for className merging
 function cn(...classes) {
@@ -10,14 +13,14 @@ function cn(...classes) {
 
 // Background Gradient Animation Component
 const BackgroundGradientAnimation = ({
-  gradientBackgroundStart = "rgb(108, 0, 162)",
-  gradientBackgroundEnd = "rgb(0, 17, 82)",
-  firstColor = "18, 113, 255",
-  secondColor = "221, 74, 255",
-  thirdColor = "100, 220, 255",
-  fourthColor = "200, 50, 50",
-  fifthColor = "180, 180, 50",
-  pointerColor = "140, 100, 255",
+  gradientBackgroundStart = "rgb(72, 94, 200)",
+  gradientBackgroundEnd = "rgb(18, 34, 92)",
+  firstColor = "120, 160, 255",
+  secondColor = "164, 210, 255",
+  thirdColor = "132, 196, 235",
+  fourthColor = "96, 140, 220",
+  fifthColor = "172, 215, 250",
+  pointerColor = "150, 180, 255",
   size = "80%",
   blendingValue = "hard-light",
   children,
@@ -219,12 +222,12 @@ const CuteGradientBackground = () => {
     <BackgroundGradientAnimation
       gradientBackgroundStart={theme.colors.background}
       gradientBackgroundEnd={theme.colors.cardBackground}
-      firstColor="255, 107, 107"
-      secondColor="255, 217, 61"
-      thirdColor="255, 245, 225"
-      fourthColor="255, 182, 182"
-      fifthColor="255, 235, 153"
-      pointerColor="255, 107, 107"
+      firstColor="120, 160, 255"
+      secondColor="164, 210, 255"
+      thirdColor="132, 196, 235"
+      fourthColor="96, 140, 220"
+      fifthColor="172, 215, 250"
+      pointerColor="150, 180, 255"
       containerClassName="fixed inset-0"
       interactive={true}
     />
@@ -232,298 +235,6 @@ const CuteGradientBackground = () => {
 };
 
 // Icon Components
-const BookIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-const WorkIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-const StarIcon = ({ className, style }) => (
-  <svg className={className} style={style} width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
-  </svg>
-);
-
-// Glow Card Component
-const GlowCard = ({ children, glowColor = 'blue', className = '', transform, hoverTransform }) => {
-  const cardRef = useRef(null);
-  const innerRef = useRef(null);
-
-  useEffect(() => {
-    let animationFrameId;
-    
-    const syncPointer = (e) => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-      
-      animationFrameId = requestAnimationFrame(() => {
-        const { clientX: x, clientY: y } = e;
-        if (cardRef.current) {
-          cardRef.current.style.setProperty('--x', x.toFixed(2));
-          cardRef.current.style.setProperty('--xp', (x / window.innerWidth).toFixed(2));
-          cardRef.current.style.setProperty('--y', y.toFixed(2));
-          cardRef.current.style.setProperty('--yp', (y / window.innerHeight).toFixed(2));
-        }
-      });
-    };
-    
-    document.addEventListener('pointermove', syncPointer);
-    return () => {
-      document.removeEventListener('pointermove', syncPointer);
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-    };
-  }, []);
-
-  const glowColorMap = {
-    primary: { base: 0, spread: 30 },
-    secondary: { base: 50, spread: 30 },
-  };
-
-  const { base, spread } = glowColorMap[glowColor] || glowColorMap.primary;
-
-  const cardStyle = {
-    '--base': base,
-    '--spread': spread,
-    '--radius': '16',
-    '--border': '2',
-    '--backdrop': theme.colors.cardBackground,
-    '--backup-border': glowColor === 'primary' ? theme.colors.primary : theme.colors.secondary,
-    '--size': '120',
-    '--border-size': 'calc(var(--border, 2) * 1px)',
-    '--spotlight-size': 'calc(var(--size, 120) * 1px)',
-    '--hue': 'calc(var(--base) + (var(--xp, 0) * var(--spread, 0)))',
-    width: '320px',
-    height: '400px',
-    backgroundImage: `radial-gradient(
-      var(--spotlight-size) var(--spotlight-size) at
-      calc(var(--x, 0) * 1px)
-      calc(var(--y, 0) * 1px),
-      ${glowColor === 'primary' ? 'rgba(255, 107, 107, 0.1)' : 'rgba(255, 217, 61, 0.1)'}, transparent
-    )`,
-    backgroundColor: theme.colors.cardBackground,
-    border: `2px solid ${glowColor === 'primary' ? theme.colors.primary : theme.colors.secondary}`,
-    borderRadius: '16px',
-    position: 'relative',
-    padding: '1.5rem',
-    boxShadow: `0 8px 32px ${glowColor === 'primary' ? 'rgba(255, 107, 107, 0.15)' : 'rgba(255, 217, 61, 0.15)'}`,
-    transform: transform,
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-    cursor: 'pointer',
-  };
-
-  const handleMouseEnter = () => {
-    if (cardRef.current && hoverTransform) {
-      cardRef.current.style.transform = hoverTransform;
-      cardRef.current.style.boxShadow = '0 12px 48px rgba(0,0,0,0.15)';
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (cardRef.current && transform) {
-      cardRef.current.style.transform = transform;
-      cardRef.current.style.boxShadow = '0 8px 32px rgba(0,0,0,0.1)';
-    }
-  };
-
-  return (
-    <>
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          [data-glow]::before {
-            content: "";
-            position: absolute;
-            inset: calc(var(--border-size) * -1);
-            border: var(--border-size) solid transparent;
-            border-radius: calc(var(--radius) * 1px);
-            background: radial-gradient(
-              calc(var(--spotlight-size) * 0.75) calc(var(--spotlight-size) * 0.75) at
-              calc(var(--x, 0) * 1px)
-              calc(var(--y, 0) * 1px),
-              hsl(var(--hue, 210) 100% 50% / 1), transparent 100%
-            );
-            background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
-            background-position: 50% 50%;
-            background-attachment: fixed;
-            mask: linear-gradient(transparent, transparent), linear-gradient(white, white);
-            mask-clip: padding-box, border-box;
-            mask-composite: intersect;
-            pointer-events: none;
-            filter: brightness(1.5);
-          }
-        `
-      }} />
-      <div
-        ref={cardRef}
-        data-glow
-        style={cardStyle}
-        className={className}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        <div ref={innerRef} data-glow style={{ position: 'absolute', inset: 0, opacity: 0.8, borderRadius: '14px' }}></div>
-        {children}
-      </div>
-    </>
-  );
-};
-
-// Cute Glow Card Component
-const CuteGlowCard = ({ title, description, icon, glowColor, onAddItem, transform, hoverTransform }) => {
-  const [showStars, setShowStars] = useState(false);
-
-  const handleMouseEnter = () => {
-    if (!showStars) {
-      setShowStars(true);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (showStars) {
-      setShowStars(false);
-    }
-  };
-
-  return (
-    <GlowCard 
-      glowColor={glowColor} 
-      transform={transform}
-      hoverTransform={hoverTransform}
-    >
-      <div 
-        style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          height: '100%', 
-          position: 'relative', 
-          zIndex: 10 
-        }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{
-              padding: '1rem',
-              borderRadius: '50%',
-              background: glowColor === 'primary'
-                ? `linear-gradient(135deg, ${theme.colors.primary}20 0%, ${theme.colors.primary}10 100%)` 
-                : `linear-gradient(135deg, ${theme.colors.secondary}20 0%, ${theme.colors.secondary}10 100%)`,
-              transform: showStars ? 'scale(1.1)' : 'scale(1)',
-              transition: 'transform 0.3s ease',
-              color: glowColor === 'primary' ? theme.colors.primary : theme.colors.secondary
-            }}>
-              {icon}
-            </div>
-            <div>
-              <h3 style={{
-                fontSize: '1.5rem',
-                fontWeight: 'bold',
-                margin: 0,
-                marginBottom: '0.25rem',
-                color: showStars ? (glowColor === 'primary' ? theme.colors.primary : theme.colors.secondary) : theme.colors.textPrimary,
-                transition: 'color 0.3s ease'
-              }}>
-                {title}
-              </h3>
-            </div>
-          </div>
-          <button
-            onClick={onAddItem}
-            style={{
-              width: '2.5rem',
-              height: '2.5rem',
-              borderRadius: '50%',
-              border: 'none',
-              background: glowColor === 'primary' 
-                ? theme.colors.primary
-                : theme.colors.secondary,
-              color: 'white',
-              cursor: 'pointer',
-              fontSize: '1.25rem',
-              fontWeight: 'bold',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transform: showStars ? 'scale(1.1) rotate(90deg)' : 'scale(1) rotate(0deg)',
-              transition: 'transform 0.3s ease',
-              boxShadow: `0 4px 12px ${
-  glowColor === 'primary'
-    ? theme.colors.primary + '40'
-    : theme.colors.secondary + '40'
-}`
-
-              }}
-            
-          >
-            +
-          </button>
-        </div>
-
-        {/* Description */}
-        <div style={{ 
-          flex: 1, 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          textAlign: 'center'
-        }}>
-          <p style={{
-            fontSize: '1rem',
-            color: theme.colors.textSecondary,
-            lineHeight: '1.6',
-            maxWidth: '250px'
-          }}>
-            {description}
-          </p>
-        </div>
-
-        {/* Animated Stars */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '0.25rem',
-          marginTop: '0.5rem',
-          opacity: showStars ? 1 : 0,
-          transition: 'opacity 0.3s ease'
-        }}>
-          {[...Array(5)].map((_, i) => (
-            <StarIcon 
-              key={i}
-              style={{
-                color: theme.colors.secondary,
-                animationDelay: `${i * 100}ms`,
-                animation: showStars ? 'pulse 1s ease-in-out infinite' : 'none'
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.1); }
-          }
-        `
-      }} />
-    </GlowCard>
-  );
-};
-
 export default function CuteScheduleApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -531,10 +242,17 @@ export default function CuteScheduleApp() {
     { id: 1, title: 'App redesign concept', date: '2024-01-15' },
     { id: 2, title: 'Weekend project', date: '2024-01-14' }
   ]);
+  const router = useRouter();
   const [workItems, setWorkItems] = useState([
     { id: 1, title: 'Complete landing page', status: 'in-progress' },
     { id: 2, title: 'Review code changes', status: 'todo' }
   ]);
+  const handleNavigateToIdeas = () => {
+    router.push('/ideas');
+  };
+  const handleNavigateToWork = () => {
+    router.push('/work');
+  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -585,14 +303,16 @@ export default function CuteScheduleApp() {
         maxWidth: '512px',
         padding: '0 1rem'
       }}>
-        <div style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          borderRadius: '9999px',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-          transition: 'all 0.3s ease'
-        }}>
+      <div style={{
+        backgroundColor: 'rgba(228, 235, 255, 0.25)',
+        backdropFilter: 'blur(26px)',
+        borderRadius: '9999px',
+        boxShadow: '0 20px 48px rgba(60, 90, 170, 0.25)',
+        transition: 'all 0.3s ease',
+        border: '1px solid rgba(104, 136, 230, 0.55)',
+        outline: '1px solid rgba(255, 255, 255, 0.14)',
+        outlineOffset: '-2px'
+      }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -601,27 +321,27 @@ export default function CuteScheduleApp() {
           }}>
             {/* App Name */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div style={{
-                width: '32px',
-                height: '32px',
-                background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                borderRadius: '50%',
+            <div style={{
+              width: '32px',
+              height: '32px',
+              background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+              borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
-              }}>
-                <span style={{
-                  color: 'white',
+            }}>
+              <span style={{
+                  color: 'rgba(240, 246, 255, 0.95)',
                   fontSize: '0.875rem',
                   fontWeight: 'bold'
                 }}>CS</span>
               </div>
               <h1 style={{
-                color: 'white',
+                color: 'rgba(238, 243, 255, 0.95)',
                 fontWeight: '600',
                 fontSize: '1.125rem',
                 margin: 0,
-                textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                textShadow: '0 2px 6px rgba(40, 60, 120, 0.25)',
                 display: isMobile ? 'none' : 'block'
               }}>
                 Cute Schedule
@@ -641,10 +361,10 @@ export default function CuteScheduleApp() {
                   style={{
                     width: '100%',
                     padding: '0.5rem 1rem 0.5rem 2.5rem',
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    backgroundColor: 'rgba(228, 235, 255, 0.2)',
+                    border: '1px solid rgba(198, 208, 255, 0.35)',
                     borderRadius: '9999px',
-                    color: 'white',
+                    color: theme.colors.textPrimary,
                     fontSize: '0.875rem',
                     outline: 'none',
                     backdropFilter: 'blur(10px)'
@@ -655,7 +375,7 @@ export default function CuteScheduleApp() {
                   left: '0.75rem',
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  color: 'rgba(255, 255, 255, 0.6)'
+                  color: 'rgba(128, 152, 220, 0.8)'
                 }}>
                   🔍
                 </div>
@@ -672,18 +392,21 @@ export default function CuteScheduleApp() {
                   height: '40px',
                   borderRadius: '50%',
                   border: 'none',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  color: 'white',
+                  backgroundColor: sidebarOpen
+                    ? theme.alphaColors.primary40
+                    : theme.alphaColors.primary20,
+                  color: sidebarOpen ? theme.colors.background : theme.colors.primary,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   transition: 'all 0.3s ease',
-                  fontSize: '1.2rem'
+                  fontSize: '1.2rem',
+                  boxShadow: '0 10px 24px rgba(74, 106, 196, 0.25)'
                 }}
                 title={sidebarOpen ? 'Close Sidebar' : 'Open Sidebar'}
               >
-                {sidebarOpen ? '✕' : '☰'}
+                {sidebarOpen ? '✕' : <MenuIcon size={18} />}
               </button>
               
               {/* Theme Toggle */}
@@ -869,22 +592,22 @@ export default function CuteScheduleApp() {
             }}>
               {/* Idea Book Card */}
               <CuteGlowCard
-                title="📝 Idea Book"
+                title="Idea Book"
                 description="Write down any thought or inspiration. You can organize them later."
-                icon={<BookIcon />}
+                icon={<BookIcon size={24} />}
                 glowColor="primary"
-                onAddItem={() => alert('Navigate to Idea Book page')}
+                onClick={handleNavigateToIdeas}
                 transform="rotate(-2deg)"
                 hoverTransform="rotate(0deg) scale(1.02)"
               />
               
               {/* Work Desk Card */}
               <CuteGlowCard
-                title="💼 Work Desk"
+                title="Work Desk"
                 description="Manage your daily tasks and goals here. Keep everything in order."
-                icon={<WorkIcon />}
+                icon={<WorkIcon size={24} />}
                 glowColor="secondary"
-                onAddItem={() => alert('Navigate to Work Desk page')}
+                onClick={handleNavigateToWork}
                 transform="rotate(2deg)"
                 hoverTransform="rotate(0deg) scale(1.02)"
               />
@@ -912,7 +635,7 @@ export default function CuteScheduleApp() {
         }}
         title="Start Tour"
       >
-        ❓
+        <QuestionIcon size={24} />
       </button>
     </div>
   );

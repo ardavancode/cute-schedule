@@ -1,12 +1,12 @@
 // Theme Configuration for Cute Schedule
 export const theme = {
   colors: {
-    primary: '#FF6B6B',
-    secondary: '#FFD93D', 
-    background: 'rgba(255, 255, 255, 0.8)',
-    cardBackground: 'rgba(255, 245, 225, 0.9)',
-    textPrimary: '#333333',
-    textSecondary: '#666666'
+    primary: '#6C8CFF',
+    secondary: '#8AD7F4',
+    background: 'rgba(242, 247, 255, 0.85)',
+    cardBackground: 'rgba(230, 238, 255, 0.9)',
+    textPrimary: '#1F2937',
+    textSecondary: '#4B5563'
   },
   
   // Helper functions for color variations
@@ -14,23 +14,23 @@ export const theme = {
   
   // Pre-defined alpha variations for common use
   alphaColors: {
-    primary10: '#FF6B6B1A',   // 10% opacity
-    primary20: '#FF6B6B33',   // 20% opacity
-    primary40: '#FF6B6B66',   // 40% opacity
-    secondary10: '#FFD93D1A',
-    secondary20: '#FFD93D33',
-    secondary40: '#FFD93D66',
+    primary10: '#6C8CFF1A',   // 10% opacity
+    primary20: '#6C8CFF33',   // 20% opacity
+    primary40: '#6C8CFF66',   // 40% opacity
+    secondary10: '#8AD7F41A',
+    secondary20: '#8AD7F433',
+    secondary40: '#8AD7F466',
     background90: '#FFFFFFF0', // 90% opacity
     backgroundF5: '#FFFFFFF5', // 95% opacity
   },
   
   // Shadows with theme colors
   shadows: {
-    primary: '0 4px 12px #FF6B6B40',
-    secondary: '0 4px 12px #FFD93D40',
-    card: '0 8px 32px rgba(255, 107, 107, 0.15)',
-    cardSecondary: '0 8px 32px rgba(255, 217, 61, 0.15)',
-    small: '0 2px 8px #FF6B6B40',
+    primary: '0 4px 12px rgba(108, 140, 255, 0.25)',
+    secondary: '0 4px 12px rgba(138, 215, 244, 0.25)',
+    card: '0 8px 32px rgba(108, 140, 255, 0.18)',
+    cardSecondary: '0 8px 32px rgba(138, 215, 244, 0.18)',
+    small: '0 2px 8px rgba(108, 140, 255, 0.2)',
   },
   
   // Border radius values
@@ -85,11 +85,11 @@ export const theme = {
 export const darkTheme = {
   ...theme,
   colors: {
-    primary: '#FF8A8A',
-    secondary: '#FFE066',
-    background: '#1A1A1A',
-    cardBackground: '#2D2D2D',
-    textPrimary: '#FFFFFF',
-    textSecondary: '#B0B0B0'
+    primary: '#8CA5FF',
+    secondary: '#7CD3F3',
+    background: '#121826',
+    cardBackground: '#1F2A40',
+    textPrimary: '#F9FAFB',
+    textSecondary: '#9CA3AF'
   }
 };
