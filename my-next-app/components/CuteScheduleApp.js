@@ -6,11 +6,108 @@ import { theme } from '../styles/theme';
 import CuteGlowCard from './ui/CuteGlowCard';
 import { BookIcon, WorkIcon, QuestionIcon, MenuIcon } from './ui/Icons';
 
-// Utility function for className merging
-function cn(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
+const palette = {
+  emerald: '#037971',
+  deepTeal: '#214E5D',
+  sapphire: '#275DAD',
+  mist: '#D4F5F5',
+  sand: '#F0EAD6',
+};
 
+const cardPalettes = {
+  idea: {
+    surface: 'rgba(212, 245, 245, 0.92)',
+    border: 'rgba(3, 121, 113, 0.38)',
+    highlight: 'rgba(3, 121, 113, 0.18)',
+    shadow: '0 24px 48px rgba(3, 121, 113, 0.24)',
+    accent: palette.emerald,
+    text: 'rgba(33, 78, 93, 0.78)',
+    buttonText: palette.sand,
+    buttonShadow: '0 10px 28px rgba(3, 121, 113, 0.32)',
+  },
+  work: {
+    surface: 'rgba(240, 234, 214, 0.92)',
+    border: 'rgba(39, 93, 173, 0.36)',
+    highlight: 'rgba(39, 93, 173, 0.18)',
+    shadow: '0 24px 48px rgba(39, 93, 173, 0.24)',
+    accent: palette.sapphire,
+    text: 'rgba(33, 78, 93, 0.75)',
+    buttonText: '#FFFFFF',
+    buttonShadow: '0 10px 28px rgba(39, 93, 173, 0.32)',
+  },
+};
+
+const SearchIcon = ({ size = 18 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    stroke="currentColor"
+    strokeWidth={1.8}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="11" cy="11" r="6.5" />
+    <path d="m20 20-3.4-3.4" />
+  </svg>
+);
+
+const PlannerIcon = ({ size = 18 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    stroke="currentColor"
+    strokeWidth={1.6}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="3.5" y="5" width="17" height="15" rx="2.5" />
+    <path d="M8 3.5v3" />
+    <path d="M16 3.5v3" />
+    <path d="M3.5 10h17" />
+    <path d="M9 14h6" />
+  </svg>
+);
+
+const BellIcon = ({ size = 18 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    stroke="currentColor"
+    strokeWidth={1.6}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M18.5 16.5H5.5l1-1.5a5 5 0 0 0 .9-2.9V10a5.6 5.6 0 0 1 11.2 0v2.1a5 5 0 0 0 .9 2.9l1 1.5Z" />
+    <path d="M10 18.5a2 2 0 0 0 4 0" />
+  </svg>
+);
+
+const MoonIcon = ({ size = 18 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    stroke="currentColor"
+    strokeWidth={1.6}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
+  </svg>
+);
+
+// Utility function for className merging
 // Background Gradient Animation Component
 const BackgroundGradientAnimation = ({
   gradientBackgroundStart = "rgb(72, 94, 200)",
@@ -73,36 +170,44 @@ const BackgroundGradientAnimation = ({
   }, [curX, curY]);
 
   const handleMouseMove = (event) => {
-    if (interactiveRef.current) {
-      const rect = interactiveRef.current.getBoundingClientRect();
-      const newTgX = event.clientX - rect.left;
-      const newTgY = event.clientY - rect.top;
-      
-      // Only update if position changed significantly
-      if (Math.abs(newTgX - tgX) > 2 || Math.abs(newTgY - tgY) > 2) {
-        setTgX(newTgX);
-        setTgY(newTgY);
-      }
+    const rect = event.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const newTgX = event.clientX - centerX;
+    const newTgY = event.clientY - centerY;
+
+    if (Math.abs(newTgX - tgX) > 2 || Math.abs(newTgY - tgY) > 2) {
+      setTgX(newTgX);
+      setTgY(newTgY);
     }
   };
 
   return (
     <div
-      className={cn(
-        "fixed inset-0 overflow-hidden",
-        containerClassName
-      )}
+      className={containerClassName}
       style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
         background: `linear-gradient(40deg, ${gradientBackgroundStart}, ${gradientBackgroundEnd})`,
         zIndex: -1
       }}
+      onMouseMove={interactive ? handleMouseMove : undefined}
     >
-      <div className={cn("", className)}>{children}</div>
+      <div className={className}>{children}</div>
       <div
-        className={cn(
-          "gradients-container h-full w-full blur-lg",
-          isSafari ? "blur-2xl" : "[filter:blur(40px)]"
-        )}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          filter: isSafari ? 'blur(32px)' : 'blur(40px)',
+          pointerEvents: 'none'
+        }}
       >
         <div
           style={{
@@ -177,7 +282,6 @@ const BackgroundGradientAnimation = ({
         {interactive && (
           <div
             ref={interactiveRef}
-            onMouseMove={handleMouseMove}
             style={{
               background: `radial-gradient(circle at center, rgba(${pointerColor}, 0.8) 0%, rgba(${pointerColor}, 0) 50%)`,
               mixBlendMode: blendingValue,
@@ -220,14 +324,16 @@ const BackgroundGradientAnimation = ({
 const CuteGradientBackground = () => {
   return (
     <BackgroundGradientAnimation
-      gradientBackgroundStart={theme.colors.background}
-      gradientBackgroundEnd={theme.colors.cardBackground}
-      firstColor="120, 160, 255"
-      secondColor="164, 210, 255"
-      thirdColor="132, 196, 235"
-      fourthColor="96, 140, 220"
-      fifthColor="172, 215, 250"
-      pointerColor="150, 180, 255"
+      gradientBackgroundStart="rgba(3, 121, 113, 0.75)"
+      gradientBackgroundEnd="rgba(39, 93, 173, 0.78)"
+      firstColor="3, 121, 113"
+      secondColor="33, 78, 93"
+      thirdColor="39, 93, 173"
+      fourthColor="212, 245, 245"
+      fifthColor="240, 234, 214"
+      pointerColor="39, 93, 173"
+      size="88%"
+      blendingValue="soft-light"
       containerClassName="fixed inset-0"
       interactive={true}
     />
@@ -283,6 +389,40 @@ export default function CuteScheduleApp() {
     setWorkItems([...workItems, newItem]);
   };
 
+  const iconButtonStyle = (active = false) => ({
+    width: isMobile ? '36px' : '42px',
+    height: isMobile ? '36px' : '42px',
+    borderRadius: '9999px',
+    border: '1px solid rgba(33, 78, 93, 0.22)',
+    background: active
+      ? 'linear-gradient(145deg, rgba(3, 121, 113, 0.28) 0%, rgba(39, 93, 173, 0.32) 100%)'
+      : 'rgba(212, 245, 245, 0.92)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: palette.deepTeal,
+    cursor: 'pointer',
+    transform: 'translateY(0)',
+    transition: 'transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease',
+    boxShadow: active
+      ? '0 18px 38px rgba(32, 78, 93, 0.28)'
+      : '0 12px 28px rgba(33, 78, 93, 0.18)'
+  });
+
+  const resetIconButtonStyle = (element, active = false) => {
+    if (!element) return;
+    const base = iconButtonStyle(active);
+    Object.entries(base).forEach(([property, value]) => {
+      element.style[property] = value;
+    });
+  };
+
+  const headerActions = [
+    { label: 'Search schedule', Icon: SearchIcon },
+    { label: 'Daily planner', Icon: PlannerIcon },
+    { label: 'Notifications', Icon: BellIcon }
+  ];
+
   return (
     <div style={{ 
       minHeight: '100vh', 
@@ -293,158 +433,183 @@ export default function CuteScheduleApp() {
       {/* Cute Gradient Background */}
       <CuteGradientBackground />
       {/* Floating Header */}
-      <div style={{
-        position: 'fixed',
-        top: '1rem',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 50,
-        width: '100%',
-        maxWidth: '512px',
-        padding: '0 1rem'
-      }}>
-      <div style={{
-        backgroundColor: 'rgba(228, 235, 255, 0.25)',
-        backdropFilter: 'blur(26px)',
-        borderRadius: '9999px',
-        boxShadow: '0 20px 48px rgba(60, 90, 170, 0.25)',
-        transition: 'all 0.3s ease',
-        border: '1px solid rgba(104, 136, 230, 0.55)',
-        outline: '1px solid rgba(255, 255, 255, 0.14)',
-        outlineOffset: '-2px'
-      }}>
-          <div style={{
+      <div
+        style={{
+          position: 'fixed',
+          top: isMobile ? '0.75rem' : '1rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 50,
+          width: '100%',
+          maxWidth: isMobile ? '560px' : '720px',
+          padding: isMobile ? '0 0.75rem' : '0 1rem'
+        }}
+      >
+        <div
+          style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0.75rem 1.5rem'
-          }}>
-            {/* App Name */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{
-              width: '32px',
-              height: '32px',
-              background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-              borderRadius: '50%',
+            gap: isMobile ? '0.75rem' : '1.25rem',
+            padding: isMobile ? '0.75rem 1rem' : '0.9rem 1.5rem',
+            borderRadius: '26px',
+            border: '1px solid rgba(3, 121, 113, 0.18)',
+            background: 'linear-gradient(125deg, rgba(212, 245, 245, 0.9) 0%, rgba(240, 234, 214, 0.92) 55%, rgba(39, 93, 173, 0.22) 100%)',
+            boxShadow: '0 28px 52px rgba(3, 121, 113, 0.25)',
+            backdropFilter: 'blur(28px)',
+            transition: 'box-shadow 0.3s ease'
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: isMobile ? '0.6rem' : '0.85rem'
+            }}
+          >
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              type="button"
+              aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
+              style={iconButtonStyle(sidebarOpen)}
+              onMouseEnter={(event) => {
+                event.currentTarget.style.transform = 'translateY(-2px)';
+                event.currentTarget.style.boxShadow = '0 20px 40px rgba(3, 121, 113, 0.3)';
+              }}
+              onMouseLeave={(event) => resetIconButtonStyle(event.currentTarget, sidebarOpen)}
+            >
+              {sidebarOpen ? (
+                <span style={{ fontSize: '1rem', fontWeight: 600, lineHeight: 1 }}>×</span>
+              ) : (
+                <MenuIcon size={isMobile ? 16 : 18} />
+              )}
+            </button>
+
+            <div
+              style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
-            }}>
-              <span style={{
-                  color: 'rgba(240, 246, 255, 0.95)',
-                  fontSize: '0.875rem',
-                  fontWeight: 'bold'
-                }}>CS</span>
-              </div>
-              <h1 style={{
-                color: 'rgba(238, 243, 255, 0.95)',
-                fontWeight: '600',
-                fontSize: '1.125rem',
-                margin: 0,
-                textShadow: '0 2px 6px rgba(40, 60, 120, 0.25)',
-                display: isMobile ? 'none' : 'block'
-              }}>
-                Cute Schedule
-              </h1>
-            </div>
-
-            {/* Search Bar */}
-            <div style={{ flex: 1, maxWidth: '300px', margin: '0 1rem' }}>
-              <div style={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center'
-              }}>
-                <input
-                  type="text"
-                  placeholder="Search schedules..."
-                  style={{
-                    width: '100%',
-                    padding: '0.5rem 1rem 0.5rem 2.5rem',
-                    backgroundColor: 'rgba(228, 235, 255, 0.2)',
-                    border: '1px solid rgba(198, 208, 255, 0.35)',
-                    borderRadius: '9999px',
-                    color: theme.colors.textPrimary,
-                    fontSize: '0.875rem',
-                    outline: 'none',
-                    backdropFilter: 'blur(10px)'
-                  }}
-                />
-                <div style={{
-                  position: 'absolute',
-                  left: '0.75rem',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: 'rgba(128, 152, 220, 0.8)'
-                }}>
-                  🔍
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              {/* Sidebar Toggle */}
-              <button 
-                onClick={() => setSidebarOpen(!sidebarOpen)}
+                gap: isMobile ? '0.55rem' : '0.75rem'
+              }}
+            >
+              <span
                 style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  border: 'none',
-                  backgroundColor: sidebarOpen
-                    ? theme.alphaColors.primary40
-                    : theme.alphaColors.primary20,
-                  color: sidebarOpen ? theme.colors.background : theme.colors.primary,
-                  cursor: 'pointer',
+                  width: isMobile ? '36px' : '42px',
+                  height: isMobile ? '36px' : '42px',
+                  borderRadius: '14px',
+                  background: `linear-gradient(140deg, ${palette.emerald} 0%, ${palette.sapphire} 100%)`,
+                  color: '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  transition: 'all 0.3s ease',
-                  fontSize: '1.2rem',
-                  boxShadow: '0 10px 24px rgba(74, 106, 196, 0.25)'
+                  fontSize: isMobile ? '0.8rem' : '0.9rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  boxShadow: '0 16px 32px rgba(3, 121, 113, 0.35)'
                 }}
-                title={sidebarOpen ? 'Close Sidebar' : 'Open Sidebar'}
               >
-                {sidebarOpen ? '✕' : <MenuIcon size={18} />}
-              </button>
-              
-              {/* Theme Toggle */}
-              <button style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                border: 'none',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                color: 'white',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.3s ease'
-              }}>
-                🌙
-              </button>
-              
-              {/* User Button */}
-              <button style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                border: 'none',
-                background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                color: 'white',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 'bold',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                transition: 'all 0.3s ease'
-              }}>
-                👤
-              </button>
+                CS
+              </span>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.2rem'
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: isMobile ? '1rem' : '1.25rem',
+                    fontWeight: 600,
+                    color: theme.colors.textPrimary,
+                    margin: 0
+                  }}
+                >
+                  Cute Schedule
+                </span>
+                {!isMobile && (
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      letterSpacing: '0.18em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(33, 78, 93, 0.66)'
+                    }}
+                  >
+                    plan · focus · glow
+                  </span>
+                )}
+              </div>
             </div>
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: isMobile ? '0.6rem' : '0.75rem'
+            }}
+          >
+            {headerActions.map(({ label, Icon }) => (
+              <button
+                key={label}
+                type="button"
+                aria-label={label}
+                style={iconButtonStyle(false)}
+                onMouseEnter={(event) => {
+                  event.currentTarget.style.transform = 'translateY(-2px)';
+                  event.currentTarget.style.boxShadow = '0 18px 38px rgba(32, 78, 93, 0.28)';
+                }}
+                onMouseLeave={(event) => resetIconButtonStyle(event.currentTarget)}
+              >
+                <Icon size={isMobile ? 16 : 18} />
+              </button>
+            ))}
+
+            <button
+              type="button"
+              aria-label="Toggle theme"
+              style={iconButtonStyle(false)}
+              onMouseEnter={(event) => {
+                event.currentTarget.style.transform = 'translateY(-2px)';
+                event.currentTarget.style.boxShadow = '0 18px 38px rgba(32, 78, 93, 0.28)';
+              }}
+              onMouseLeave={(event) => resetIconButtonStyle(event.currentTarget)}
+            >
+              <MoonIcon size={isMobile ? 16 : 18} />
+            </button>
+
+            <button
+              type="button"
+              aria-label="View profile"
+              style={{
+                width: isMobile ? '36px' : '42px',
+                height: isMobile ? '36px' : '42px',
+                borderRadius: '50%',
+                border: '1px solid rgba(3, 121, 113, 0.18)',
+                background: `linear-gradient(145deg, ${palette.emerald} 0%, ${palette.sapphire} 100%)`,
+                color: '#FFFFFF',
+                fontWeight: 600,
+                letterSpacing: '0.05em',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transform: 'translateY(0)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                boxShadow: '0 18px 32px rgba(3, 121, 113, 0.35)'
+              }}
+              onMouseEnter={(event) => {
+                event.currentTarget.style.transform = 'translateY(-2px)';
+                event.currentTarget.style.boxShadow = '0 22px 38px rgba(39, 93, 173, 0.42)';
+              }}
+              onMouseLeave={(event) => {
+                event.currentTarget.style.transform = 'translateY(0)';
+                event.currentTarget.style.boxShadow = '0 18px 32px rgba(3, 121, 113, 0.35)';
+              }}
+            >
+              YOU
+            </button>
           </div>
         </div>
       </div>
@@ -453,9 +618,9 @@ export default function CuteScheduleApp() {
         {/* Sidebar */}
         <aside style={{
           width: sidebarOpen ? '256px' : '0px',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(15px)',
-          borderRight: sidebarOpen ? '1px solid rgba(255, 255, 255, 0.2)' : 'none',
+          background: 'linear-gradient(185deg, rgba(3, 121, 113, 0.26) 0%, rgba(33, 78, 93, 0.32) 55%, rgba(39, 93, 173, 0.25) 100%)',
+          backdropFilter: 'blur(24px)',
+          borderRight: sidebarOpen ? '1px solid rgba(3, 121, 113, 0.28)' : 'none',
           padding: sidebarOpen ? '5rem 1rem 1rem 1rem' : '0',
           position: 'fixed',
           left: 0,
@@ -467,53 +632,77 @@ export default function CuteScheduleApp() {
           overflow: 'hidden'
         }}>
           <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ fontSize: '0.75rem', fontWeight: '600', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '0.75rem', textTransform: 'uppercase' }}>
+            <h3 style={{ fontSize: '0.75rem', fontWeight: '600', color: 'rgba(240, 234, 214, 0.85)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.18em' }}>
               Main
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              <button style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-                padding: '0.5rem 0.75rem',
-                backgroundColor: '#3b82f6',
-                color: 'white',
-                border: 'none',
-                borderRadius: '0.5rem',
-                cursor: 'pointer',
-                textAlign: 'left'
-              }}>
+              <button
+                onClick={() => {
+                  router.push('/');
+                  setSidebarOpen(false);
+                }}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  padding: '0.5rem 0.75rem',
+                  background: 'rgba(212, 245, 245, 0.15)',
+                  color: 'rgba(240, 234, 214, 0.95)',
+                  border: '1px solid rgba(3, 121, 113, 0.25)',
+                  borderRadius: '0.75rem',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  boxShadow: '0 12px 28px rgba(3, 121, 113, 0.25)',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease'
+                }}
+              >
                 🏠 Dashboard
               </button>
-              <button style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-                padding: '0.5rem 0.75rem',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '0.5rem',
-                cursor: 'pointer',
-                textAlign: 'left'
-              }}>
+              <button
+                onClick={() => {
+                  router.push('/ideas');
+                  setSidebarOpen(false);
+                }}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  padding: '0.5rem 0.75rem',
+                  background: 'rgba(240, 234, 214, 0.12)',
+                  color: 'rgba(240, 234, 214, 0.92)',
+                  border: '1px solid rgba(3, 121, 113, 0.18)',
+                  borderRadius: '0.75rem',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  boxShadow: '0 10px 24px rgba(3, 121, 113, 0.18)',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease'
+                }}
+              >
                 📖 Idea Book
               </button>
-              <button style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-                padding: '0.5rem 0.75rem',
-                backgroundColor: 'transparent',
-                color: '#374151',
-                border: 'none',
-                borderRadius: '0.5rem',
-                cursor: 'pointer',
-                textAlign: 'left'
-              }}>
+              <button
+                onClick={() => {
+                  router.push('/work');
+                  setSidebarOpen(false);
+                }}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  padding: '0.5rem 0.75rem',
+                  background: 'rgba(240, 234, 214, 0.12)',
+                  color: 'rgba(240, 234, 214, 0.92)',
+                  border: '1px solid rgba(3, 121, 113, 0.18)',
+                  borderRadius: '0.75rem',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  boxShadow: '0 10px 24px rgba(3, 121, 113, 0.18)',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease'
+                }}
+              >
                 💼 Work Desk
               </button>
             </div>
@@ -564,19 +753,19 @@ export default function CuteScheduleApp() {
                 fontWeight: 'bold', 
                 marginBottom: '1rem', 
                 margin: 0,
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 192, 203, 0.8) 50%, rgba(186, 85, 211, 0.8) 100%)',
+                background: `linear-gradient(135deg, ${palette.mist} 0%, ${palette.emerald} 40%, ${palette.sapphire} 100%)`,
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
                 color: 'transparent',
-                textShadow: '0 4px 8px rgba(0,0,0,0.1)'
+                textShadow: '0 4px 8px rgba(3, 121, 113, 0.2)'
               }}>
                 Welcome to Cute Schedule ✨
               </h1>
               <p style={{ 
-                color: 'rgba(255, 255, 255, 0.8)', 
+                color: 'rgba(240, 234, 214, 0.85)', 
                 margin: 0,
-                fontSize: '1.1rem',
-                textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                fontSize: '1.05rem',
+                textShadow: '0 2px 6px rgba(3, 121, 113, 0.25)'
               }}>
                 Organize your ideas and get work done beautifully
               </p>
@@ -599,6 +788,7 @@ export default function CuteScheduleApp() {
                 onClick={handleNavigateToIdeas}
                 transform="rotate(-2deg)"
                 hoverTransform="rotate(0deg) scale(1.02)"
+                cardPalette={cardPalettes.idea}
               />
               
               {/* Work Desk Card */}
@@ -610,6 +800,7 @@ export default function CuteScheduleApp() {
                 onClick={handleNavigateToWork}
                 transform="rotate(2deg)"
                 hoverTransform="rotate(0deg) scale(1.02)"
+                cardPalette={cardPalettes.work}
               />
             </div>
           </div>

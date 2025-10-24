@@ -4,7 +4,15 @@ import { useEffect, useRef } from 'react';
 import { theme } from '../../styles/theme';
 
 // Base Glow Card Component
-const GlowCard = ({ children, glowColor = 'blue', className = '', transform, hoverTransform, onClick }) => {
+const GlowCard = ({
+  children,
+  glowColor = 'primary',
+  className = '',
+  transform,
+  hoverTransform,
+  onClick,
+  colorScheme,
+}) => {
   const cardRef = useRef(null);
   const innerRef = useRef(null);
 
@@ -43,13 +51,46 @@ const GlowCard = ({ children, glowColor = 'blue', className = '', transform, hov
 
   const { base, spread } = glowColorMap[glowColor] || glowColorMap.primary;
 
+  const defaultSchemes = {
+    primary: {
+      accent: theme.colors.primary,
+      surface: theme.colors.cardBackground,
+      border: theme.colors.primary,
+      highlight: 'rgba(255, 107, 107, 0.12)',
+      shadow: '0 8px 32px rgba(108, 140, 255, 0.18)',
+      text: theme.colors.textSecondary,
+    },
+    secondary: {
+      accent: theme.colors.secondary,
+      surface: theme.colors.cardBackground,
+      border: theme.colors.secondary,
+      highlight: 'rgba(255, 217, 61, 0.12)',
+      shadow: '0 8px 32px rgba(255, 217, 61, 0.18)',
+      text: theme.colors.textSecondary,
+    },
+  };
+
+  const scheme = {
+    ...(defaultSchemes[glowColor] || defaultSchemes.primary),
+    ...(colorScheme || {}),
+  };
+
+  const surfaceColor = scheme.surface || theme.colors.cardBackground;
+  const highlightColor =
+    scheme.highlight ||
+    (glowColor === 'primary'
+      ? 'rgba(255, 107, 107, 0.12)'
+      : 'rgba(255, 217, 61, 0.12)');
+  const borderColor = scheme.border || defaultSchemes.primary.border;
+  const shadowColor = scheme.shadow || defaultSchemes.primary.shadow;
+
   const cardStyle = {
     '--base': base,
     '--spread': spread,
     '--radius': '16',
     '--border': '2',
-    '--backdrop': theme.colors.cardBackground,
-    '--backup-border': glowColor === 'primary' ? theme.colors.primary : theme.colors.secondary,
+    '--backdrop': surfaceColor,
+    '--backup-border': borderColor,
     '--size': '120',
     '--border-size': 'calc(var(--border, 2) * 1px)',
     '--spotlight-size': 'calc(var(--size, 120) * 1px)',
@@ -60,14 +101,14 @@ const GlowCard = ({ children, glowColor = 'blue', className = '', transform, hov
       var(--spotlight-size) var(--spotlight-size) at
       calc(var(--x, 0) * 1px)
       calc(var(--y, 0) * 1px),
-      ${glowColor === 'primary' ? 'rgba(255, 107, 107, 0.1)' : 'rgba(255, 217, 61, 0.1)'}, transparent
+      ${highlightColor}, transparent
     )`,
-    backgroundColor: theme.colors.cardBackground,
-    border: `2px solid ${glowColor === 'primary' ? theme.colors.primary : theme.colors.secondary}`,
+    backgroundColor: surfaceColor,
+    border: `2px solid ${borderColor}`,
     borderRadius: '16px',
     position: 'relative',
     padding: '1.5rem',
-    boxShadow: `0 8px 32px ${glowColor === 'primary' ? 'rgba(255, 107, 107, 0.15)' : 'rgba(255, 217, 61, 0.15)'}`,
+    boxShadow: shadowColor,
     transform: transform,
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
     cursor: 'pointer',
@@ -142,8 +183,17 @@ export default function CuteGlowCard({
   onAddItem,
   transform,
   hoverTransform,
+  cardPalette,
 }) {
-  const accentColor = glowColor === 'primary' ? theme.colors.primary : theme.colors.secondary;
+  const accentColor =
+    (cardPalette && cardPalette.accent) ||
+    (glowColor === 'primary' ? theme.colors.primary : theme.colors.secondary);
+  const secondaryText =
+    (cardPalette && cardPalette.text) || theme.colors.textSecondary;
+  const buttonTextColor =
+    (cardPalette && cardPalette.buttonText) || theme.colors.background;
+  const buttonShadow =
+    (cardPalette && cardPalette.buttonShadow) || `${accentColor}40`;
 
   return (
     <GlowCard
@@ -217,7 +267,7 @@ export default function CuteGlowCard({
               borderRadius: '50%',
               border: 'none',
               background: accentColor,
-              color: theme.colors.background,
+              color: buttonTextColor,
               cursor: 'pointer',
               fontSize: '1.25rem',
               fontWeight: 'bold',
@@ -225,9 +275,7 @@ export default function CuteGlowCard({
               alignItems: 'center',
               justifyContent: 'center',
               transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-              boxShadow: `0 4px 12px ${
-                accentColor + '40'
-              }`,
+              boxShadow: buttonShadow,
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'scale(1.08)';
@@ -253,7 +301,7 @@ export default function CuteGlowCard({
           <p
             style={{
               fontSize: '1rem',
-              color: theme.colors.textSecondary,
+              color: secondaryText,
               lineHeight: '1.6',
               maxWidth: '250px',
             }}

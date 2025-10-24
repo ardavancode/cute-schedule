@@ -1,6 +1,8 @@
 ﻿'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { MenuIcon } from '../../components/ui/Icons';
 
 const HomeButtonIcon = () => (
   <svg
@@ -19,6 +21,7 @@ const HomeButtonIcon = () => (
 );
 
 export default function WorkPage() {
+  const router = useRouter();
   return (
     <div
       style={{
@@ -60,6 +63,41 @@ export default function WorkPage() {
       >
         <HomeButtonIcon />
       </Link>
+
+      <button
+        type="button"
+        onClick={() => router.push('/')}
+        style={{
+          position: 'absolute',
+          top: '1.5rem',
+          left: '1.5rem',
+          width: '48px',
+          height: '48px',
+          borderRadius: '50%',
+          border: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'rgba(255, 255, 255, 0.85)',
+          color: '#214E5D',
+          boxShadow: '0 10px 24px rgba(33, 78, 93, 0.25)',
+          cursor: 'pointer',
+          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        }}
+        onMouseEnter={(event) => {
+          const target = event.currentTarget;
+          target.style.transform = 'scale(1.05)';
+          target.style.boxShadow = '0 14px 32px rgba(33, 78, 93, 0.28)';
+        }}
+        onMouseLeave={(event) => {
+          const target = event.currentTarget;
+          target.style.transform = 'scale(1)';
+          target.style.boxShadow = '0 10px 24px rgba(33, 78, 93, 0.25)';
+        }}
+        aria-label="Open sidebar"
+      >
+        <MenuIcon size={20} className="" style={{}} />
+      </button>
 
       <div
         style={{
