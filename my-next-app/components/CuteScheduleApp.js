@@ -1,41 +1,41 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { theme } from '../styles/theme';
-import CuteGlowCard from './ui/CuteGlowCard';
-import Header from './layout/Header';
-import Sidebar from './layout/Sidebar';
-import { BookIcon, WorkIcon, QuestionIcon } from './ui/Icons';
+import { useState, useEffect, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { theme } from "../styles/theme";
+import CuteGlowCard from "./ui/CuteGlowCard";
+import Header from "./layout/Header";
+import Sidebar from "./layout/Sidebar";
+import { BookIcon, WorkIcon, QuestionIcon } from "./ui/Icons";
 
 const palette = {
-  emerald: '#037971',
-  deepTeal: '#214E5D',
-  sapphire: '#275DAD',
-  mist: '#D4F5F5',
-  sand: '#F0EAD6',
+  emerald: "#037971",
+  deepTeal: "#214E5D",
+  sapphire: "#275DAD",
+  mist: "#D4F5F5",
+  sand: "#F0EAD6",
 };
 
 const cardPalettes = {
   idea: {
-    surface: 'rgba(212, 245, 245, 0.92)',
-    border: 'rgba(3, 121, 113, 0.38)',
-    highlight: 'rgba(3, 121, 113, 0.18)',
-    shadow: '0 24px 48px rgba(3, 121, 113, 0.24)',
+    surface: "rgba(212, 245, 245, 0.92)",
+    border: "rgba(3, 121, 113, 0.38)",
+    highlight: "rgba(3, 121, 113, 0.18)",
+    shadow: "0 24px 48px rgba(3, 121, 113, 0.24)",
     accent: palette.emerald,
-    text: 'rgba(33, 78, 93, 0.78)',
+    text: "rgba(33, 78, 93, 0.78)",
     buttonText: palette.sand,
-    buttonShadow: '0 10px 28px rgba(3, 121, 113, 0.32)',
+    buttonShadow: "0 10px 28px rgba(3, 121, 113, 0.32)",
   },
   work: {
-    surface: 'rgba(240, 234, 214, 0.92)',
-    border: 'rgba(39, 93, 173, 0.36)',
-    highlight: 'rgba(39, 93, 173, 0.18)',
-    shadow: '0 24px 48px rgba(39, 93, 173, 0.24)',
+    surface: "rgba(240, 234, 214, 0.92)",
+    border: "rgba(39, 93, 173, 0.36)",
+    highlight: "rgba(39, 93, 173, 0.18)",
+    shadow: "0 24px 48px rgba(39, 93, 173, 0.24)",
     accent: palette.sapphire,
-    text: 'rgba(33, 78, 93, 0.75)',
-    buttonText: '#FFFFFF',
-    buttonShadow: '0 10px 28px rgba(39, 93, 173, 0.32)',
+    text: "rgba(33, 78, 93, 0.75)",
+    buttonText: "#FFFFFF",
+    buttonShadow: "0 10px 28px rgba(39, 93, 173, 0.32)",
   },
 };
 
@@ -135,9 +135,15 @@ const BackgroundGradientAnimation = ({
   const [isSafari, setIsSafari] = useState(false);
 
   useEffect(() => {
-    if (typeof document !== 'undefined') {
-      document.body.style.setProperty("--gradient-background-start", gradientBackgroundStart);
-      document.body.style.setProperty("--gradient-background-end", gradientBackgroundEnd);
+    if (typeof document !== "undefined") {
+      document.body.style.setProperty(
+        "--gradient-background-start",
+        gradientBackgroundStart,
+      );
+      document.body.style.setProperty(
+        "--gradient-background-end",
+        gradientBackgroundEnd,
+      );
       document.body.style.setProperty("--first-color", firstColor);
       document.body.style.setProperty("--second-color", secondColor);
       document.body.style.setProperty("--third-color", thirdColor);
@@ -147,10 +153,21 @@ const BackgroundGradientAnimation = ({
       document.body.style.setProperty("--size", size);
       document.body.style.setProperty("--blending-value", blendingValue);
     }
-  }, [gradientBackgroundStart, gradientBackgroundEnd, firstColor, secondColor, thirdColor, fourthColor, fifthColor, pointerColor, size, blendingValue]);
+  }, [
+    gradientBackgroundStart,
+    gradientBackgroundEnd,
+    firstColor,
+    secondColor,
+    thirdColor,
+    fourthColor,
+    fifthColor,
+    pointerColor,
+    size,
+    blendingValue,
+  ]);
 
   useEffect(() => {
-    if (typeof navigator !== 'undefined') {
+    if (typeof navigator !== "undefined") {
       setIsSafari(/^((?!chrome|android).)*safari/i.test(navigator.userAgent));
     }
   }, []);
@@ -158,8 +175,8 @@ const BackgroundGradientAnimation = ({
   useEffect(() => {
     const moveInterval = setInterval(() => {
       if (!interactiveRef.current) return;
-      setCurX(prev => prev + (tgX - prev) / 20);
-      setCurY(prev => prev + (tgY - prev) / 20);
+      setCurX((prev) => prev + (tgX - prev) / 20);
+      setCurY((prev) => prev + (tgY - prev) / 20);
     }, 16);
 
     return () => clearInterval(moveInterval);
@@ -188,27 +205,27 @@ const BackgroundGradientAnimation = ({
     <div
       className={containerClassName}
       style={{
-        position: 'fixed',
+        position: "fixed",
         top: 0,
         left: 0,
-        width: '100vw',
-        height: '100vh',
-        overflow: 'hidden',
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
         background: `linear-gradient(40deg, ${gradientBackgroundStart}, ${gradientBackgroundEnd})`,
-        zIndex: -1
+        zIndex: -1,
       }}
       onMouseMove={interactive ? handleMouseMove : undefined}
     >
       <div className={className}>{children}</div>
       <div
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           left: 0,
-          width: '100%',
-          height: '100%',
-          filter: isSafari ? 'blur(32px)' : 'blur(40px)',
-          pointerEvents: 'none'
+          width: "100%",
+          height: "100%",
+          filter: isSafari ? "blur(32px)" : "blur(40px)",
+          pointerEvents: "none",
         }}
       >
         <div
@@ -217,12 +234,12 @@ const BackgroundGradientAnimation = ({
             mixBlendMode: blendingValue,
             width: size,
             height: size,
-            position: 'absolute',
+            position: "absolute",
             top: `calc(50% - ${size}/2)`,
             left: `calc(50% - ${size}/2)`,
-            transformOrigin: 'center center',
-            animation: 'moveVertical 30s ease infinite',
-            opacity: 1
+            transformOrigin: "center center",
+            animation: "moveVertical 30s ease infinite",
+            opacity: 1,
           }}
         />
         <div
@@ -231,12 +248,12 @@ const BackgroundGradientAnimation = ({
             mixBlendMode: blendingValue,
             width: size,
             height: size,
-            position: 'absolute',
+            position: "absolute",
             top: `calc(50% - ${size}/2)`,
             left: `calc(50% - ${size}/2)`,
-            transformOrigin: 'calc(50% - 400px)',
-            animation: 'moveInCircle 20s reverse infinite',
-            opacity: 1
+            transformOrigin: "calc(50% - 400px)",
+            animation: "moveInCircle 20s reverse infinite",
+            opacity: 1,
           }}
         />
         <div
@@ -245,12 +262,12 @@ const BackgroundGradientAnimation = ({
             mixBlendMode: blendingValue,
             width: size,
             height: size,
-            position: 'absolute',
+            position: "absolute",
             top: `calc(50% - ${size}/2)`,
             left: `calc(50% - ${size}/2)`,
-            transformOrigin: 'calc(50% + 400px)',
-            animation: 'moveInCircle 40s linear infinite',
-            opacity: 1
+            transformOrigin: "calc(50% + 400px)",
+            animation: "moveInCircle 40s linear infinite",
+            opacity: 1,
           }}
         />
         <div
@@ -259,12 +276,12 @@ const BackgroundGradientAnimation = ({
             mixBlendMode: blendingValue,
             width: size,
             height: size,
-            position: 'absolute',
+            position: "absolute",
             top: `calc(50% - ${size}/2)`,
             left: `calc(50% - ${size}/2)`,
-            transformOrigin: 'calc(50% - 200px)',
-            animation: 'moveHorizontal 40s ease infinite',
-            opacity: 0.7
+            transformOrigin: "calc(50% - 200px)",
+            animation: "moveHorizontal 40s ease infinite",
+            opacity: 0.7,
           }}
         />
         <div
@@ -273,12 +290,12 @@ const BackgroundGradientAnimation = ({
             mixBlendMode: blendingValue,
             width: size,
             height: size,
-            position: 'absolute',
+            position: "absolute",
             top: `calc(50% - ${size}/2)`,
             left: `calc(50% - ${size}/2)`,
-            transformOrigin: 'calc(50% - 800px) calc(50% + 800px)',
-            animation: 'moveInCircle 20s ease infinite',
-            opacity: 1
+            transformOrigin: "calc(50% - 800px) calc(50% + 800px)",
+            animation: "moveInCircle 20s ease infinite",
+            opacity: 1,
           }}
         />
         {interactive && (
@@ -287,20 +304,21 @@ const BackgroundGradientAnimation = ({
             style={{
               background: `radial-gradient(circle at center, rgba(${pointerColor}, 0.8) 0%, rgba(${pointerColor}, 0) 50%)`,
               mixBlendMode: blendingValue,
-              width: '200%',
-              height: '200%',
-              position: 'absolute',
-              top: '-50%',
-              left: '-50%',
+              width: "200%",
+              height: "200%",
+              position: "absolute",
+              top: "-50%",
+              left: "-50%",
               opacity: 0.7,
-              pointerEvents: 'none'
+              pointerEvents: "none",
             }}
           />
         )}
       </div>
-      
-      <style dangerouslySetInnerHTML={{
-        __html: `
+
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
           @keyframes moveHorizontal {
             0% { transform: translateX(-50%) translateY(-10%); }
             50% { transform: translateX(50%) translateY(10%); }
@@ -316,8 +334,9 @@ const BackgroundGradientAnimation = ({
             50% { transform: translateY(50%); }
             100% { transform: translateY(-50%); }
           }
-        `
-      }} />
+        `,
+        }}
+      />
     </div>
   );
 };
@@ -347,38 +366,38 @@ export default function CuteScheduleApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [ideas, setIdeas] = useState([
-    { id: 1, title: 'App redesign concept', date: '2024-01-15' },
-    { id: 2, title: 'Weekend project', date: '2024-01-14' }
+    { id: 1, title: "App redesign concept", date: "2024-01-15" },
+    { id: 2, title: "Weekend project", date: "2024-01-14" },
   ]);
   const router = useRouter();
   const pathname = usePathname();
   const [workItems, setWorkItems] = useState([
-    { id: 1, title: 'Complete landing page', status: 'in-progress' },
-    { id: 2, title: 'Review code changes', status: 'todo' }
+    { id: 1, title: "Complete landing page", status: "in-progress" },
+    { id: 2, title: "Review code changes", status: "todo" },
   ]);
   const handleNavigateToIdeas = () => {
-    router.push('/ideas');
+    router.push("/ideas");
   };
   const handleNavigateToWork = () => {
-    router.push('/work');
+    router.push("/work");
   };
 
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024);
     };
-    
+
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const addIdea = () => {
     const newIdea = {
       id: Date.now(),
-      title: 'New Idea',
-      date: new Date().toISOString().split('T')[0]
+      title: "New Idea",
+      date: new Date().toISOString().split("T")[0],
     };
     setIdeas([...ideas, newIdea]);
   };
@@ -386,16 +405,16 @@ export default function CuteScheduleApp() {
   const addWorkItem = () => {
     const newItem = {
       id: Date.now(),
-      title: 'New Task',
-      status: 'todo'
+      title: "New Task",
+      status: "todo",
     };
     setWorkItems([...workItems, newItem]);
   };
 
   const headerActions = [
-    { label: 'Search schedule', Icon: SearchIcon },
-    { label: 'Daily planner', Icon: PlannerIcon },
-    { label: 'Notifications', Icon: BellIcon }
+    { label: "Search schedule", Icon: SearchIcon },
+    { label: "Daily planner", Icon: PlannerIcon },
+    { label: "Notifications", Icon: BellIcon },
   ];
 
   const handleNavigate = (path) => {
@@ -404,12 +423,14 @@ export default function CuteScheduleApp() {
   };
 
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      fontFamily: 'system-ui, sans-serif', 
-      position: 'relative',
-      overflow: 'hidden'
-    }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        fontFamily: "system-ui, sans-serif",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
       {/* Cute Gradient Background */}
       <CuteGradientBackground />
       {/* Floating Header */}
@@ -421,7 +442,7 @@ export default function CuteScheduleApp() {
         palette={palette}
       />
 
-      <div style={{ display: 'flex', minHeight: '100vh', paddingTop: '5rem' }}>
+      <div style={{ display: "flex", minHeight: "100vh", paddingTop: "5rem" }}>
         <Sidebar
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
@@ -432,29 +453,39 @@ export default function CuteScheduleApp() {
         />
 
         {/* Main Content */}
-        <main style={{ 
-          flex: 1, 
-          padding: '2rem', 
-          position: 'relative', 
-          zIndex: 1,
-          overflowY: 'auto',
-          maxHeight: 'calc(100vh - 5rem)',
-          transition: 'margin-left 0.3s ease',
-          marginLeft: !isMobile && !sidebarOpen ? '0' : '0'
-        }}>
-          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <main
+          style={{
+            flex: 1,
+            padding: "2rem",
+            position: "relative",
+            zIndex: 1,
+            overflowY: "auto",
+            maxHeight: "calc(100vh - 5rem)",
+            transition: "margin-left 0.3s ease",
+            marginLeft: !isMobile && !sidebarOpen ? "0" : "0",
+          }}
+        >
+          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
             {/* Welcome */}
-            <div style={{ textAlign: 'center', marginBottom: '3rem', position: 'relative', zIndex: 10 }}>
-            </div>
+            <div
+              style={{
+                textAlign: "center",
+                marginBottom: "3rem",
+                position: "relative",
+                zIndex: 10,
+              }}
+            ></div>
 
             {/* Cards */}
-            <div style={{
-              display: 'flex',
-              flexDirection: isMobile ? 'column' : 'row',
-              gap: '2rem',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: isMobile ? "column" : "row",
+                gap: "2rem",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               {/* Idea Book Card */}
               <CuteGlowCard
                 title="Idea Book"
@@ -466,7 +497,7 @@ export default function CuteScheduleApp() {
                 hoverTransform="rotate(0deg) scale(1.02)"
                 cardPalette={cardPalettes.idea}
               />
-              
+
               {/* Work Desk Card */}
               <CuteGlowCard
                 title="Work Desk"
@@ -485,20 +516,20 @@ export default function CuteScheduleApp() {
 
       {/* Tour Button */}
       <button
-        onClick={() => alert('Tour started!')}
+        onClick={() => alert("Tour started!")}
         style={{
-          position: 'fixed',
-          bottom: '1.5rem',
-          right: '1.5rem',
-          width: '3rem',
-          height: '3rem',
-          backgroundColor: '#3b82f6',
-          color: 'white',
-          border: 'none',
-          borderRadius: '50%',
-          cursor: 'pointer',
-          fontSize: '1.25rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+          position: "fixed",
+          bottom: "1.5rem",
+          right: "1.5rem",
+          width: "3rem",
+          height: "3rem",
+          backgroundColor: "#3b82f6",
+          color: "white",
+          border: "none",
+          borderRadius: "50%",
+          cursor: "pointer",
+          fontSize: "1.25rem",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
         }}
         title="Start Tour"
       >

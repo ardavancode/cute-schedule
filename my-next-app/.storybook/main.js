@@ -1,21 +1,19 @@
-
-
 /** @type { import('@storybook/nextjs-vite').StorybookConfig } */
 const config = {
-  "stories": [
+  stories: [
     "../stories/**/*.mdx",
-    "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)"
+    "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
-  "addons": [
+  addons: [
     "@chromatic-com/storybook",
     "@storybook/addon-docs",
     "@storybook/addon-onboarding",
     "@storybook/addon-a11y",
-    "@storybook/addon-vitest"
+    "@storybook/addon-vitest",
   ],
-  "framework": {
-    "name": "@storybook/nextjs-vite",
-    "options": {}
-  }
+  framework: {
+    name: "@storybook/nextjs-vite",
+    options: {},
+  },
 };
 export default config;

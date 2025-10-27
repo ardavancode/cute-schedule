@@ -1,8 +1,8 @@
-﻿'use client';
+﻿"use client";
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { MenuIcon } from '../../components/ui/Icons';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { MenuIcon } from "../../components/ui/Icons";
 
 const HomeButtonIcon = () => (
   <svg
@@ -25,39 +25,39 @@ export default function WorkPage() {
   return (
     <div
       style={{
-        minHeight: '100vh',
-        position: 'relative',
-        backgroundImage: 'linear-gradient(135deg, #214E5D 0%, #275DAD 100%)',
-        backgroundSize: '260% 260%',
-        animation: 'workGradientShift 22s ease-in-out infinite alternate',
+        minHeight: "100vh",
+        position: "relative",
+        backgroundImage: "linear-gradient(135deg, #214E5D 0%, #275DAD 100%)",
+        backgroundSize: "260% 260%",
+        animation: "workGradientShift 22s ease-in-out infinite alternate",
       }}
     >
       <Link
         href="/"
         style={{
-          position: 'absolute',
-          top: '1.5rem',
-          right: '1.5rem',
-          width: '48px',
-          height: '48px',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#214E5D',
-          background: 'rgba(255, 255, 255, 0.85)',
-          boxShadow: '0 10px 24px rgba(33, 78, 93, 0.25)',
-          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+          position: "absolute",
+          top: "1.5rem",
+          right: "1.5rem",
+          width: "48px",
+          height: "48px",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#214E5D",
+          background: "rgba(255, 255, 255, 0.85)",
+          boxShadow: "0 10px 24px rgba(33, 78, 93, 0.25)",
+          transition: "transform 0.2s ease, box-shadow 0.2s ease",
         }}
         onMouseEnter={(e) => {
           const target = e.currentTarget as HTMLAnchorElement;
-          target.style.transform = 'scale(1.05)';
-          target.style.boxShadow = '0 14px 32px rgba(33, 78, 93, 0.28)';
+          target.style.transform = "scale(1.05)";
+          target.style.boxShadow = "0 14px 32px rgba(33, 78, 93, 0.28)";
         }}
         onMouseLeave={(e) => {
           const target = e.currentTarget as HTMLAnchorElement;
-          target.style.transform = 'scale(1)';
-          target.style.boxShadow = '0 10px 24px rgba(33, 78, 93, 0.25)';
+          target.style.transform = "scale(1)";
+          target.style.boxShadow = "0 10px 24px rgba(33, 78, 93, 0.25)";
         }}
         aria-label="Back to home"
       >
@@ -66,33 +66,33 @@ export default function WorkPage() {
 
       <button
         type="button"
-        onClick={() => router.push('/')}
+        onClick={() => router.push("/")}
         style={{
-          position: 'absolute',
-          top: '1.5rem',
-          left: '1.5rem',
-          width: '48px',
-          height: '48px',
-          borderRadius: '50%',
-          border: 'none',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba(255, 255, 255, 0.85)',
-          color: '#214E5D',
-          boxShadow: '0 10px 24px rgba(33, 78, 93, 0.25)',
-          cursor: 'pointer',
-          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+          position: "absolute",
+          top: "1.5rem",
+          left: "1.5rem",
+          width: "48px",
+          height: "48px",
+          borderRadius: "50%",
+          border: "none",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "rgba(255, 255, 255, 0.85)",
+          color: "#214E5D",
+          boxShadow: "0 10px 24px rgba(33, 78, 93, 0.25)",
+          cursor: "pointer",
+          transition: "transform 0.2s ease, box-shadow 0.2s ease",
         }}
         onMouseEnter={(event) => {
           const target = event.currentTarget;
-          target.style.transform = 'scale(1.05)';
-          target.style.boxShadow = '0 14px 32px rgba(33, 78, 93, 0.28)';
+          target.style.transform = "scale(1.05)";
+          target.style.boxShadow = "0 14px 32px rgba(33, 78, 93, 0.28)";
         }}
         onMouseLeave={(event) => {
           const target = event.currentTarget;
-          target.style.transform = 'scale(1)';
-          target.style.boxShadow = '0 10px 24px rgba(33, 78, 93, 0.25)';
+          target.style.transform = "scale(1)";
+          target.style.boxShadow = "0 10px 24px rgba(33, 78, 93, 0.25)";
         }}
         aria-label="Open sidebar"
       >
@@ -101,23 +101,23 @@ export default function WorkPage() {
 
       <div
         style={{
-          position: 'absolute',
-          top: '1.5rem',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          textAlign: 'center',
-          color: 'rgba(255, 255, 255, 0.92)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.5rem',
+          position: "absolute",
+          top: "1.5rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          textAlign: "center",
+          color: "rgba(255, 255, 255, 0.92)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.5rem",
         }}
       >
         <h1
           style={{
             margin: 0,
-            fontSize: '3rem',
+            fontSize: "3rem",
             fontWeight: 700,
-            letterSpacing: '0.04em',
+            letterSpacing: "0.04em",
           }}
         >
           Work Desk
@@ -125,10 +125,10 @@ export default function WorkPage() {
         <p
           style={{
             margin: 0,
-            fontSize: '1rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.35em',
-            color: 'rgba(255, 255, 255, 0.75)',
+            fontSize: "1rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.35em",
+            color: "rgba(255, 255, 255, 0.75)",
           }}
         >
           plan • act • achieve
@@ -149,9 +149,3 @@ export default function WorkPage() {
     </div>
   );
 }
-
-
-
-
-
-
