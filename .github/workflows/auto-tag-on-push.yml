@@ -3,7 +3,7 @@ name: Auto Tag Demo Branch
 on:
   push:
     branches:
-      - demo  # هر بار که چیزی روی demo پوش بشه، اجرا میشه
+      - demo
 
 jobs:
   tag:
@@ -12,7 +12,7 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Fetch tags
@@ -23,27 +23,20 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Get next tag
+      - name: Determine next tag
         id: get
         run: |
-          # آخرین تگ فعلی رو پیدا کن (اگه نبود از v0.2.6.0 شروع کن)
           LAST=$(git describe --tags --abbrev=0 2>/dev/null || echo v0.2.6.0)
           echo "آخرین تگ فعلی: $LAST"
 
-          # حذف v از اول تگ
           BASE=${LAST#v}
-
-          # جدا کردن اعداد نسخه
           IFS='.' read -r MA MI PA BL <<<"$BASE"
 
-          # اگه عدد چهارمی وجود نداره، بسازش
-          [ -z "$BL" ] && BL=0
+          # اگه عدد چهارمی (BL) وجود نداشت، درستش کن
+          if [ -z "$BL" ]; then BL=0; fi
 
-          # افزایش عدد آخر
-          BL=$((BL+1))
-
-          # ساخت نسخه‌ی جدید
-          NEXT="v${MA}.${MI}.${PA}.${BL}"
+          # همیشه فرمت 4 عددی نگه دار
+          NEXT="v${MA}.${MI}.${PA}.$((BL+1))"
 
           echo "تگ جدید: $NEXT"
           echo "next_tag=$NEXT" >> $GITHUB_OUTPUT
@@ -53,15 +46,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="${{ steps.get.outputs.next_tag }}"
-
-          # اگه تگ از قبل وجود داشت، حذفش کن (لوکال و ریموت)
+          # حذف نسخه‌ی قبلی اگر موجود بود
           git tag -d "$TAG" 2>/dev/null || true
           git push origin ":refs/tags/$TAG" 2>/dev/null || true
-
-          # ساخت تگ جدید
           git tag -a "$TAG" -m "Auto build $TAG"
-
-          # پوش تگ جدید به گیت‌هاب
           git push origin "$TAG"
-
-          echo "✅ تگ جدید ساخته و پوش شد: $TAG"
+          echo "✅ تگ جدید ساخته شد و پوش شد: $TAG"
