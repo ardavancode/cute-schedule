@@ -93,13 +93,13 @@ export default function Header({
   palette = defaultPalette,
 }) {
   const iconButtonStyle = (active = false) => ({
-    width: isMobile ? '36px' : '42px',
-    height: isMobile ? '36px' : '42px',
-    borderRadius: '9999px',
-    border: '1px solid rgba(33, 78, 93, 0.22)',
+    width: isMobile ? '32px' : '36px',
+    height: isMobile ? '32px' : '36px',
+    borderRadius: '18px',
+    border: '1px solid rgba(33, 78, 93, 0.14)',
     background: active
-      ? 'linear-gradient(145deg, rgba(3, 121, 113, 0.28) 0%, rgba(39, 93, 173, 0.32) 100%)'
-      : 'rgba(212, 245, 245, 0.92)',
+      ? 'rgba(3, 121, 113, 0.16)'
+      : 'rgba(240, 244, 247, 0.82)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -107,10 +107,10 @@ export default function Header({
     cursor: 'pointer',
     transform: 'translateY(0)',
     transition:
-      'transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease',
+      'transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease',
     boxShadow: active
-      ? '0 18px 38px rgba(32, 78, 93, 0.28)'
-      : '0 12px 28px rgba(33, 78, 93, 0.18)',
+      ? '0 12px 24px rgba(32, 78, 93, 0.22)'
+      : '0 8px 20px rgba(33, 78, 93, 0.16)',
   });
 
   const resetIconButtonStyle = (element, active = false) => {
@@ -130,8 +130,8 @@ export default function Header({
         transform: 'translateX(-50%)',
         zIndex: 50,
         width: '100%',
-        maxWidth: isMobile ? '560px' : '720px',
-        padding: isMobile ? '0 0.75rem' : '0 1rem',
+        maxWidth: isMobile ? '520px' : '660px',
+        padding: isMobile ? '0 0.75rem' : '0 0.85rem',
       }}
     >
       <div
@@ -139,22 +139,21 @@ export default function Header({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: isMobile ? '0.75rem' : '1.25rem',
-          padding: isMobile ? '0.75rem 1rem' : '0.9rem 1.5rem',
-          borderRadius: '26px',
-          border: '1px solid rgba(3, 121, 113, 0.18)',
-          background:
-            'linear-gradient(125deg, rgba(212, 245, 245, 0.9) 0%, rgba(240, 234, 214, 0.92) 55%, rgba(39, 93, 173, 0.22) 100%)',
-          boxShadow: '0 28px 52px rgba(3, 121, 113, 0.25)',
-          backdropFilter: 'blur(28px)',
-          transition: 'box-shadow 0.3s ease',
+          gap: isMobile ? '0.65rem' : '1rem',
+          padding: isMobile ? '0.55rem 0.85rem' : '0.65rem 1.1rem',
+          borderRadius: '20px',
+          border: '1px solid rgba(3, 121, 113, 0.12)',
+          background: 'linear-gradient(135deg, rgba(236, 245, 245, 0.92) 0%, rgba(236, 244, 247, 0.9) 100%)',
+          boxShadow: '0 14px 30px rgba(3, 121, 113, 0.18)',
+          backdropFilter: 'blur(18px)',
+          transition: 'box-shadow 0.25s ease',
         }}
       >
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: isMobile ? '0.55rem' : '0.75rem',
+            gap: isMobile ? '0.45rem' : '0.65rem',
           }}
         >
           <button
@@ -165,7 +164,7 @@ export default function Header({
             onMouseEnter={(event) => {
               event.currentTarget.style.transform = 'translateY(-2px)';
               event.currentTarget.style.boxShadow =
-                '0 20px 40px rgba(3, 121, 113, 0.3)';
+                '0 14px 28px rgba(3, 121, 113, 0.25)';
             }}
             onMouseLeave={(event) =>
               resetIconButtonStyle(event.currentTarget, sidebarOpen)
@@ -182,10 +181,10 @@ export default function Header({
 
           <span
             style={{
-              fontSize: isMobile ? '1rem' : '1.25rem',
-              fontWeight: 600,
+              fontSize: isMobile ? '0.95rem' : '1.1rem',
+              fontWeight: 500,
               color: theme.colors.textPrimary,
-              letterSpacing: '0.05em',
+              letterSpacing: '0.04em',
             }}
           >
             Cute Schedule
@@ -196,7 +195,7 @@ export default function Header({
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: isMobile ? '0.6rem' : '0.75rem',
+            gap: isMobile ? '0.5rem' : '0.65rem',
           }}
         >
           {headerActions.map(({ label, Icon }) => (
@@ -208,7 +207,7 @@ export default function Header({
               onMouseEnter={(event) => {
                 event.currentTarget.style.transform = 'translateY(-2px)';
                 event.currentTarget.style.boxShadow =
-                  '0 18px 38px rgba(32, 78, 93, 0.28)';
+                  '0 12px 26px rgba(32, 78, 93, 0.24)';
               }}
               onMouseLeave={(event) =>
                 resetIconButtonStyle(event.currentTarget)
@@ -225,7 +224,7 @@ export default function Header({
             onMouseEnter={(event) => {
               event.currentTarget.style.transform = 'translateY(-2px)';
               event.currentTarget.style.boxShadow =
-                '0 18px 38px rgba(32, 78, 93, 0.28)';
+                '0 12px 26px rgba(32, 78, 93, 0.24)';
             }}
             onMouseLeave={(event) => resetIconButtonStyle(event.currentTarget)}
           >
@@ -248,31 +247,31 @@ export default function Header({
             type="button"
             aria-label="View profile"
             style={{
-              width: isMobile ? '36px' : '42px',
-              height: isMobile ? '36px' : '42px',
+              width: isMobile ? '34px' : '38px',
+              height: isMobile ? '34px' : '38px',
               borderRadius: '50%',
-              border: '1px solid rgba(3, 121, 113, 0.18)',
-              background: `linear-gradient(145deg, ${palette.emerald} 0%, ${palette.sapphire} 100%)`,
+              border: '1px solid rgba(3, 121, 113, 0.16)',
+              background: `linear-gradient(145deg, ${palette.emerald} 0%, ${palette.sapphire} 85%)`,
               color: '#FFFFFF',
-              fontWeight: 600,
-              letterSpacing: '0.05em',
+              fontWeight: 500,
+              letterSpacing: '0.04em',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
               transform: 'translateY(0)',
               transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-              boxShadow: '0 18px 32px rgba(3, 121, 113, 0.35)',
+              boxShadow: '0 12px 28px rgba(3, 121, 113, 0.26)',
             }}
             onMouseEnter={(event) => {
               event.currentTarget.style.transform = 'translateY(-2px)';
               event.currentTarget.style.boxShadow =
-                '0 22px 38px rgba(39, 93, 173, 0.42)';
+                '0 16px 30px rgba(39, 93, 173, 0.32)';
             }}
             onMouseLeave={(event) => {
               event.currentTarget.style.transform = 'translateY(0)';
               event.currentTarget.style.boxShadow =
-                '0 18px 32px rgba(3, 121, 113, 0.35)';
+                '0 12px 28px rgba(3, 121, 113, 0.26)';
             }}
           >
             YOU

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { theme } from '../../styles/theme';
 
 // Base Glow Card Component
@@ -14,49 +14,12 @@ const GlowCard = ({
   colorScheme,
 }) => {
   const cardRef = useRef(null);
-  const innerRef = useRef(null);
-
-  useEffect(() => {
-    let animationFrameId;
-
-    const syncPointer = (e) => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-
-      animationFrameId = requestAnimationFrame(() => {
-        const { clientX: x, clientY: y } = e;
-        if (cardRef.current) {
-          cardRef.current.style.setProperty('--x', x.toFixed(2));
-          cardRef.current.style.setProperty('--xp', (x / window.innerWidth).toFixed(2));
-          cardRef.current.style.setProperty('--y', y.toFixed(2));
-          cardRef.current.style.setProperty('--yp', (y / window.innerHeight).toFixed(2));
-        }
-      });
-    };
-
-    document.addEventListener('pointermove', syncPointer);
-    return () => {
-      document.removeEventListener('pointermove', syncPointer);
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-    };
-  }, []);
-
-  const glowColorMap = {
-    primary: { base: 0, spread: 30 },
-    secondary: { base: 50, spread: 30 },
-  };
-
-  const { base, spread } = glowColorMap[glowColor] || glowColorMap.primary;
 
   const defaultSchemes = {
     primary: {
       accent: theme.colors.primary,
       surface: theme.colors.cardBackground,
       border: theme.colors.primary,
-      highlight: 'rgba(255, 107, 107, 0.12)',
       shadow: '0 8px 32px rgba(108, 140, 255, 0.18)',
       text: theme.colors.textSecondary,
     },
@@ -64,7 +27,6 @@ const GlowCard = ({
       accent: theme.colors.secondary,
       surface: theme.colors.cardBackground,
       border: theme.colors.secondary,
-      highlight: 'rgba(255, 217, 61, 0.12)',
       shadow: '0 8px 32px rgba(255, 217, 61, 0.18)',
       text: theme.colors.textSecondary,
     },
@@ -76,33 +38,12 @@ const GlowCard = ({
   };
 
   const surfaceColor = scheme.surface || theme.colors.cardBackground;
-  const highlightColor =
-    scheme.highlight ||
-    (glowColor === 'primary'
-      ? 'rgba(255, 107, 107, 0.12)'
-      : 'rgba(255, 217, 61, 0.12)');
   const borderColor = scheme.border || defaultSchemes.primary.border;
   const shadowColor = scheme.shadow || defaultSchemes.primary.shadow;
 
   const cardStyle = {
-    '--base': base,
-    '--spread': spread,
-    '--radius': '16',
-    '--border': '2',
-    '--backdrop': surfaceColor,
-    '--backup-border': borderColor,
-    '--size': '120',
-    '--border-size': 'calc(var(--border, 2) * 1px)',
-    '--spotlight-size': 'calc(var(--size, 120) * 1px)',
-    '--hue': 'calc(var(--base) + (var(--xp, 0) * var(--spread, 0)))',
     width: '320px',
     height: '400px',
-    backgroundImage: `radial-gradient(
-      var(--spotlight-size) var(--spotlight-size) at
-      calc(var(--x, 0) * 1px)
-      calc(var(--y, 0) * 1px),
-      ${highlightColor}, transparent
-    )`,
     backgroundColor: surfaceColor,
     border: `2px solid ${borderColor}`,
     borderRadius: '16px',
@@ -129,47 +70,16 @@ const GlowCard = ({
   };
 
   return (
-    <>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-          [data-glow]::before {
-            content: "";
-            position: absolute;
-            inset: calc(var(--border-size) * -1);
-            border: var(--border-size) solid transparent;
-            border-radius: calc(var(--radius) * 1px);
-            background: radial-gradient(
-              calc(var(--spotlight-size) * 0.75) calc(var(--spotlight-size) * 0.75) at
-              calc(var(--x, 0) * 1px)
-              calc(var(--y, 0) * 1px),
-              hsl(var(--hue, 210) 100% 50% / 1), transparent 100%
-            );
-            background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
-            background-position: 50% 50%;
-            background-attachment: fixed;
-            mask: linear-gradient(transparent, transparent), linear-gradient(white, white);
-            mask-clip: padding-box, border-box;
-            mask-composite: intersect;
-            pointer-events: none;
-            filter: brightness(1.5);
-          }
-        `,
-        }}
-      />
-      <div
-        ref={cardRef}
-        data-glow
-        style={cardStyle}
-        className={className}
-        onClick={onClick}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        <div ref={innerRef} data-glow style={{ position: 'absolute', inset: 0, opacity: 0.8, borderRadius: '14px' }} />
-        {children}
-      </div>
-    </>
+    <div
+      ref={cardRef}
+      style={cardStyle}
+      className={className}
+      onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {children}
+    </div>
   );
 };
 

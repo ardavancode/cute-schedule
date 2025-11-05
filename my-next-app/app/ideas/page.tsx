@@ -1,26 +1,12 @@
 'use client';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import Sidebar from '../../components/layout/Sidebar';
-import { MenuIcon } from '../../components/ui/Icons';
-
-const HomeButtonIcon = () => (
-  <svg
-    width={20}
-    height={20}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-4h-4v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-8.5Z" />
-  </svg>
-);
+import { IdeaCard } from '../../components/ideas/IdeaCard';
+import { IdeaHero } from '../../components/ideas/IdeaHero';
+import { FloatingHomeButton } from '../../components/ideas/FloatingHomeButton';
+import { IdeaSidebar } from '../../components/ideas/IdeaSidebar';
+import { ideaTheme } from './theme';
 
 const SearchIcon = () => (
   <svg
@@ -79,50 +65,15 @@ const GridIcon = () => (
   </svg>
 );
 
-const TrashIcon = () => (
-  <svg
-    width={16}
-    height={16}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    stroke="currentColor"
-    strokeWidth={1.8}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M3 6h18" />
-    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-    <path d="M19 6v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-    <line x1="10" y1="11" x2="10" y2="17" />
-    <line x1="14" y1="11" x2="14" y2="17" />
-  </svg>
-);
-
-const PencilIcon = () => (
-  <svg
-    width={16}
-    height={16}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    stroke="currentColor"
-    strokeWidth={1.8}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M18 2 22 6 8 20H4V16L18 2Z" />
-    <path d="M15 5 19 9" />
-  </svg>
-);
-
 const filters = ['All Ideas', 'Work', 'Personal', 'Inspiration'];
 
-const sidebarPalette = {
-  emerald: '#037971',
-  deepTeal: '#214E5D',
-  sapphire: '#275DAD',
-};
+const {
+  palette: ideaPalette,
+  gradients: ideaGradients,
+  surfaces: ideaSurfaces,
+  shadows: ideaShadows,
+  utils: ideaUtils,
+} = ideaTheme;
 
 type Idea = {
   id: number;
@@ -176,9 +127,9 @@ export default function IdeasPage() {
     overflow: 'hidden',
     width: '100%',
     borderRadius: '24px',
-    background: 'rgba(189, 237, 224, 0.18)',
-    border: '1px solid rgba(187, 219, 209, 0.45)',
-    boxShadow: '0 14px 30px rgba(33, 93, 109, 0.12)',
+    background: ideaSurfaces.searchContainer,
+    border: `1px solid ${ideaSurfaces.toolbarBorderStrong}`,
+    boxShadow: ideaShadows.emptyState,
     padding: isSearchOpen ? '1rem 1.25rem' : '0 1.25rem',
   };
 
@@ -193,12 +144,12 @@ export default function IdeasPage() {
     cursor: 'pointer',
     transition: 'transform 0.2s ease, box-shadow 0.2s ease',
     backgroundImage: active
-      ? 'linear-gradient(135deg, #275DAD 0%, #0B0A07 100%)'
-      : 'linear-gradient(135deg, rgba(189, 237, 224, 0.65) 0%, rgba(187, 219, 209, 0.55) 100%)',
-    color: active ? '#BDEDE0' : '#214E5D',
+      ? ideaGradients.searchToggle
+      : ideaGradients.layoutToggleInactive,
+    color: active ? ideaPalette.sky : ideaPalette.deepTeal,
     boxShadow: active
-      ? '0 16px 32px rgba(11, 10, 7, 0.32)'
-      : '0 10px 24px rgba(33, 93, 109, 0.18)',
+      ? ideaShadows.layoutToggleActive
+      : ideaShadows.layoutToggleInactive,
   });
 
   const filteredIdeas = useMemo(() => {
@@ -259,170 +210,12 @@ export default function IdeasPage() {
 
   const handleEditIdea = (_id: number) => {};
 
-  const IdeaDisplay = ({ idea }: { idea: Idea }) => {
-    const [isHovered, setIsHovered] = useState(false);
-
-    const baseCardStyle = {
-      position: 'relative' as const,
-      border: '1px solid rgba(147, 183, 190, 0.35)',
-      borderRadius: '22px',
-      boxShadow: '0 18px 34px rgba(33, 93, 109, 0.14)',
-      backgroundImage:
-        layoutMode === 'grid'
-          ? 'linear-gradient(145deg, #D4F5F5 0%, #EDEBD7 100%)'
-          : 'linear-gradient(145deg, #EDEBD7 0%, #D4F5F5 100%)',
-      color: '#1F3A40',
-      backdropFilter: 'blur(8px)',
-      display: 'flex',
-      flexDirection: 'column' as const,
-      gap: '0.9rem',
-      padding: '1.55rem',
-      width: layoutMode === 'grid' ? 'min(260px, 100%)' : '100%',
-      minHeight: layoutMode === 'grid' ? '210px' : 'auto',
-    };
-
-    return (
-      <article
-        style={baseCardStyle}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            top: '1rem',
-            right: '1rem',
-            display: 'flex',
-            gap: '0.35rem',
-            opacity: isHovered ? 1 : 0,
-            transform: isHovered ? 'translateY(0)' : 'translateY(-6px)',
-            transition: 'opacity 0.2s ease, transform 0.2s ease',
-            pointerEvents: isHovered ? 'auto' : 'none',
-          }}
-        >
-          <button
-            type="button"
-            aria-label="Edit idea"
-            onClick={() => handleEditIdea(idea.id)}
-            style={{
-              width: '30px',
-              height: '30px',
-              borderRadius: '9999px',
-              border: '1px solid rgba(147, 183, 190, 0.5)',
-              background: 'rgba(212, 245, 245, 0.85)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#1F3A40',
-              cursor: 'pointer',
-              transition: 'background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease',
-              boxShadow: '0 8px 16px rgba(33, 93, 109, 0.12)',
-            }}
-          >
-            <PencilIcon />
-          </button>
-          <button
-            type="button"
-            aria-label="Delete idea"
-            onClick={() => handleDeleteIdea(idea.id)}
-            style={{
-              width: '30px',
-              height: '30px',
-              borderRadius: '9999px',
-              border: '1px solid rgba(147, 183, 190, 0.5)',
-              background: 'rgba(237, 235, 215, 0.9)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#7C2D12',
-              cursor: 'pointer',
-              transition: 'background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease',
-              boxShadow: '0 8px 16px rgba(33, 93, 109, 0.12)',
-            }}
-          >
-            <TrashIcon />
-          </button>
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: '0.75rem',
-          }}
-        >
-          <h3
-            style={{
-              margin: 0,
-              fontSize: '1.2rem',
-              letterSpacing: '0.04em',
-              color: '#1A2C2F',
-            }}
-          >
-            {idea.name}
-          </h3>
-          <span
-            style={{
-              fontSize: '0.7rem',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: 'rgba(31, 58, 64, 0.6)',
-            }}
-          >
-            {new Date(idea.createdAt).toLocaleDateString()}
-          </span>
-        </div>
-
-        {idea.description && (
-          <p
-            style={{
-              margin: 0,
-              lineHeight: 1.5,
-              color: 'rgba(31, 58, 64, 0.82)',
-              fontSize: '0.94rem',
-            }}
-          >
-            {idea.description}
-          </p>
-        )}
-
-        {idea.tags.length > 0 && (
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '0.5rem',
-            }}
-          >
-            {idea.tags.map((tag) => (
-              <span
-                key={tag}
-                style={{
-                  padding: '0.35rem 0.75rem',
-                  borderRadius: '9999px',
-                  background: 'rgba(147, 183, 190, 0.22)',
-                  color: '#1F3A40',
-                  fontSize: '0.75rem',
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-      </article>
-    );
-  };
-
   return (
     <div
       style={{
         minHeight: '100vh',
         position: 'relative',
-        backgroundImage: 'linear-gradient(135deg, #BDEDE0 0%, #214E5D 100%)',
+        backgroundImage: ideaGradients.pageBackground,
         backgroundSize: '260% 260%',
         animation: 'ideasGradientShift 22s ease-in-out infinite alternate',
         display: 'flex',
@@ -431,50 +224,14 @@ export default function IdeasPage() {
         paddingBottom: '6rem',
       }}
     >
-      <Sidebar
+      <IdeaSidebar
         isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
         isMobile={isMobile}
-        onNavigate={handleNavigate}
         activePath={pathname}
-        palette={sidebarPalette}
+        onToggle={() => setSidebarOpen((prev) => !prev)}
+        onClose={() => setSidebarOpen(false)}
+        onNavigate={handleNavigate}
       />
-
-      <button
-        type="button"
-        onClick={() => setSidebarOpen((prev) => !prev)}
-        style={{
-          position: 'absolute',
-          top: '1.25rem',
-          left: '1.25rem',
-          width: '48px',
-          height: '48px',
-          borderRadius: '50%',
-          border: 'none',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba(255, 255, 255, 0.85)',
-          color: '#214E5D',
-          boxShadow: '0 10px 24px rgba(33, 78, 93, 0.25)',
-          cursor: 'pointer',
-          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-          zIndex: 60,
-        }}
-        onMouseEnter={(event) => {
-          const target = event.currentTarget;
-          target.style.transform = 'scale(1.05)';
-          target.style.boxShadow = '0 14px 32px rgba(33, 78, 93, 0.28)';
-        }}
-        onMouseLeave={(event) => {
-          const target = event.currentTarget;
-          target.style.transform = 'scale(1)';
-          target.style.boxShadow = '0 10px 24px rgba(33, 78, 93, 0.25)';
-        }}
-        aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
-      >
-        <MenuIcon size={20} className="" style={{}} />
-      </button>
 
       <div
         style={{
@@ -484,97 +241,12 @@ export default function IdeasPage() {
           position: 'relative',
         }}
       >
-        <Link
-          href="/"
-          style={{
-            position: 'absolute',
-            top: '1.25rem',
-            right: isMobile ? '1.25rem' : '2.5rem',
-            width: '48px',
-            height: '48px',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#214E5D',
-            background: 'rgba(255, 255, 255, 0.85)',
-            boxShadow: '0 10px 24px rgba(33, 78, 93, 0.25)',
-            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-            zIndex: 60,
-          }}
-          onMouseEnter={(e) => {
-            const target = e.currentTarget;
-            target.style.transform = 'scale(1.05)';
-            target.style.boxShadow = '0 14px 32px rgba(33, 78, 93, 0.28)';
-          }}
-          onMouseLeave={(e) => {
-            const target = e.currentTarget;
-            target.style.transform = 'scale(1)';
-            target.style.boxShadow = '0 10px 24px rgba(33, 78, 93, 0.25)';
-          }}
-          aria-label="Back to home"
-        >
-          <HomeButtonIcon />
-        </Link>
-
-        <div
-          style={{
-            paddingTop: '0.2rem',
-            textAlign: 'center',
-            color: 'rgba(255, 255, 255, 0.92)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '0.85rem',
-          }}
-        >
-          <h1
-            style={{
-              margin: 0,
-              fontSize: '3rem',
-              fontWeight: 700,
-              letterSpacing: '0.04em',
-            }}
-          >
-            Idea Book
-          </h1>
-          <p
-            style={{
-              margin: 0,
-              fontSize: '1rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.35em',
-              color: 'rgba(255, 255, 255, 0.75)',
-            }}
-          >
-            think • write • rise
-          </p>
-          <button
-            type="button"
-            onClick={openModal}
-            style={{
-              width: '200px',
-              height: '72px',
-              borderRadius: '9999px',
-              border: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1.05rem',
-              fontWeight: 600,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: '#BDEDE0',
-              backgroundImage: 'linear-gradient(135deg, #214E5D 0%, #275DAD 100%)',
-              backgroundSize: '220% 220%',
-              animation: 'ideaButtonPulse 6s ease-in-out infinite',
-              boxShadow: '0 18px 36px rgba(11, 10, 7, 0.28)',
-              cursor: 'pointer',
-            }}
-          >
-            Add Idea
-          </button>
-        </div>
+        <FloatingHomeButton
+          isMobile={isMobile}
+          leftDesktop="calc(1.25rem + 52px)"
+          leftMobile="calc(1.25rem + 52px)"
+        />
+        <IdeaHero onAddIdea={openModal} />
 
         <section
           style={{
@@ -595,9 +267,9 @@ export default function IdeasPage() {
             justifyContent: 'space-between',
             padding: '1rem 1.25rem',
             borderRadius: '22px',
-            background: 'rgba(189, 237, 224, 0.15)',
-            border: '1px solid rgba(187, 219, 209, 0.35)',
-            boxShadow: '0 12px 24px rgba(33, 93, 109, 0.15)',
+            background: ideaSurfaces.toolbarGlass,
+            border: `1px solid ${ideaSurfaces.toolbarBorder}`,
+            boxShadow: ideaShadows.toolbar,
             backdropFilter: 'blur(10px)',
             gap: '1.25rem',
           }}
@@ -606,9 +278,9 @@ export default function IdeasPage() {
             style={{
               padding: '0.6rem 1.1rem',
               borderRadius: '18px',
-              border: '1px solid rgba(187, 219, 209, 0.45)',
-              background: 'rgba(255, 255, 255, 0.7)',
-              color: '#214E5D',
+              border: `1px solid ${ideaSurfaces.toolbarBorderStrong}`,
+              background: ideaUtils.rgba('snow', 0.7),
+              color: ideaPalette.deepTeal,
               fontSize: '0.95rem',
               outline: 'none',
               minWidth: '50px',
@@ -641,9 +313,9 @@ export default function IdeasPage() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundImage: 'linear-gradient(135deg, #275DAD 0%, #0B0A07 100%)',
-                color: '#BDEDE0',
-                boxShadow: '0 16px 34px rgba(11, 10, 7, 0.32)',
+                backgroundImage: ideaGradients.searchToggle,
+                color: ideaPalette.sky,
+                boxShadow: ideaShadows.searchToggle,
                 cursor: 'pointer',
                 transition: 'transform 0.2s ease, box-shadow 0.2s ease',
               }}
@@ -688,9 +360,9 @@ export default function IdeasPage() {
                 flex: 1,
                 padding: '0.85rem 1.1rem',
                 borderRadius: '16px',
-                border: '1px solid rgba(187, 219, 209, 0.45)',
-                background: 'rgba(255, 255, 255, 0.82)',
-                color: '#214E5D',
+                border: `1px solid ${ideaSurfaces.toolbarBorderStrong}`,
+                background: ideaUtils.rgba('snow', 0.82),
+                color: ideaPalette.deepTeal,
                 fontSize: '0.95rem',
                 outline: 'none',
               }}
@@ -701,8 +373,8 @@ export default function IdeasPage() {
                 padding: '0.85rem 1.25rem',
                 borderRadius: '16px',
                 border: 'none',
-                background: '#214E5D',
-                color: '#BDEDE0',
+                background: ideaPalette.deepTeal,
+                color: ideaPalette.sky,
                 fontWeight: 600,
                 letterSpacing: '0.08em',
                 cursor: 'pointer',
@@ -717,9 +389,9 @@ export default function IdeasPage() {
           style={{
             padding: '2.75rem 1.75rem',
             borderRadius: '28px',
-            background: 'rgba(189, 237, 224, 0.12)',
-            border: '1px dashed rgba(187, 219, 209, 0.45)',
-            color: 'rgba(255, 255, 255, 0.8)',
+            background: ideaSurfaces.emptyStateBackground,
+            border: `1px dashed ${ideaSurfaces.emptyStateBorder}`,
+            color: ideaUtils.rgba('snow', 0.8),
             textAlign: 'center',
             minHeight: '320px',
             display: 'flex',
@@ -741,7 +413,7 @@ export default function IdeasPage() {
               <span
                 style={{
                   fontSize: '0.9rem',
-                  color: 'rgba(255, 255, 255, 0.65)',
+                  color: ideaUtils.rgba('snow', 0.65),
                   letterSpacing: '0.08em',
                 }}
               >
@@ -764,7 +436,13 @@ export default function IdeasPage() {
               }}
             >
               {filteredIdeas.map((idea) => (
-                <IdeaDisplay key={idea.id} idea={idea} />
+                <IdeaCard
+                  key={idea.id}
+                  idea={idea}
+                  layout={layoutMode}
+                  onEdit={handleEditIdea}
+                  onDelete={handleDeleteIdea}
+                />
               ))}
             </div>
           )}
@@ -783,8 +461,7 @@ export default function IdeasPage() {
             position: 'fixed',
             inset: 0,
             zIndex: 50,
-            background:
-              'linear-gradient(135deg, rgba(11, 10, 7, 0.35) 0%, rgba(33, 93, 109, 0.55) 50%, rgba(189, 237, 224, 0.28) 100%)',
+            background: ideaSurfaces.modalOverlay,
             backdropFilter: 'blur(16px)',
             display: 'flex',
             alignItems: 'center',
@@ -799,18 +476,18 @@ export default function IdeasPage() {
             style={{
               width: '100%',
               maxWidth: '440px',
-              background: 'linear-gradient(145deg, rgba(189, 237, 224, 0.95), rgba(33, 93, 109, 0.92))',
-              border: '1px solid rgba(187, 219, 209, 0.55)',
+              background: ideaSurfaces.modalPanel,
+              border: `1px solid ${ideaSurfaces.modalBorder}`,
               borderRadius: '28px',
               padding: '2.25rem',
-              boxShadow: '0 34px 68px rgba(11, 10, 7, 0.32)',
+              boxShadow: ideaShadows.modal,
               display: 'flex',
               flexDirection: 'column',
               gap: '1.5rem',
               transform: isModalActive ? 'translateY(0)' : 'translateY(24px)',
               opacity: isModalActive ? 1 : 0,
               transition: 'opacity 0.35s ease, transform 0.35s ease',
-              color: '#214E5D',
+              color: ideaPalette.deepTeal,
             }}
           >
             <div
@@ -826,7 +503,7 @@ export default function IdeasPage() {
                   margin: 0,
                   fontSize: '1.65rem',
                   letterSpacing: '0.05em',
-                  color: '#0B0A07',
+                  color: ideaPalette.charcoal,
                 }}
               >
                 Capture a fresh spark
@@ -836,7 +513,7 @@ export default function IdeasPage() {
                   margin: 0,
                   fontSize: '0.9rem',
                   letterSpacing: '0.04em',
-                  color: 'rgba(11, 10, 7, 0.65)',
+                  color: ideaUtils.rgba('charcoal', 0.65),
                 }}
               >
                 Quick draft the headline, a short note, and a tag to keep it organised.
@@ -859,7 +536,7 @@ export default function IdeasPage() {
                   fontSize: '0.85rem',
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: 'rgba(11, 10, 7, 0.6)',
+                  color: ideaUtils.rgba('charcoal', 0.6),
                 }}
               >
                 Idea name
@@ -870,9 +547,9 @@ export default function IdeasPage() {
                   style={{
                     padding: '0.85rem 1rem',
                     borderRadius: '16px',
-                    border: '1px solid rgba(33, 93, 109, 0.28)',
-                    background: 'rgba(255, 255, 255, 0.85)',
-                    color: '#0B0A07',
+                    border: `1px solid ${ideaUtils.rgba('sea', 0.28)}`,
+                    background: ideaUtils.rgba('snow', 0.85),
+                    color: ideaPalette.charcoal,
                     fontSize: '0.95rem',
                     outline: 'none',
                     transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
@@ -889,7 +566,7 @@ export default function IdeasPage() {
                   fontSize: '0.85rem',
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: 'rgba(11, 10, 7, 0.6)',
+                  color: ideaUtils.rgba('charcoal', 0.6),
                 }}
               >
                 Quick note
@@ -901,9 +578,9 @@ export default function IdeasPage() {
                   style={{
                     padding: '0.85rem 1rem',
                     borderRadius: '16px',
-                    border: '1px solid rgba(33, 93, 109, 0.28)',
-                    background: 'rgba(255, 255, 255, 0.85)',
-                    color: '#0B0A07',
+                    border: `1px solid ${ideaUtils.rgba('sea', 0.28)}`,
+                    background: ideaUtils.rgba('snow', 0.85),
+                    color: ideaPalette.charcoal,
                     fontSize: '0.95rem',
                     outline: 'none',
                     resize: 'none',
@@ -920,7 +597,7 @@ export default function IdeasPage() {
                   fontSize: '0.85rem',
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: 'rgba(11, 10, 7, 0.6)',
+                  color: ideaUtils.rgba('charcoal', 0.6),
                 }}
               >
                 Tags
@@ -931,9 +608,9 @@ export default function IdeasPage() {
                   style={{
                     padding: '0.85rem 1rem',
                     borderRadius: '16px',
-                    border: '1px solid rgba(33, 93, 109, 0.28)',
-                    background: 'rgba(255, 255, 255, 0.85)',
-                    color: '#0B0A07',
+                    border: `1px solid ${ideaUtils.rgba('sea', 0.28)}`,
+                    background: ideaUtils.rgba('snow', 0.85),
+                    color: ideaPalette.charcoal,
                     fontSize: '0.95rem',
                     outline: 'none',
                     transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
@@ -954,9 +631,9 @@ export default function IdeasPage() {
                   style={{
                     padding: '0.85rem 1.4rem',
                     borderRadius: '16px',
-                    border: '1px solid rgba(33, 93, 109, 0.35)',
+                    border: `1px solid ${ideaUtils.rgba('sea', 0.35)}`,
                     background: 'transparent',
-                    color: '#0B0A07',
+                    color: ideaPalette.charcoal,
                     fontWeight: 600,
                     letterSpacing: '0.08em',
                     cursor: 'pointer',
@@ -970,12 +647,12 @@ export default function IdeasPage() {
                     padding: '0.85rem 1.6rem',
                     borderRadius: '16px',
                     border: 'none',
-                    backgroundImage: 'linear-gradient(135deg, #214E5D 0%, #275DAD 100%)',
-                    color: '#BDEDE0',
+                    backgroundImage: ideaGradients.heroButton,
+                    color: ideaPalette.sky,
                     fontWeight: 600,
                     letterSpacing: '0.08em',
                     cursor: 'pointer',
-                    boxShadow: '0 18px 32px rgba(11, 10, 7, 0.28)',
+                    boxShadow: ideaShadows.primaryButton,
                   }}
                 >
                   Save Idea
@@ -1019,3 +696,4 @@ export default function IdeasPage() {
     </div>
   );
 }
+

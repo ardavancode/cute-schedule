@@ -17,7 +17,6 @@ const defaultPalette = {
 };
 
 const mainMenuItems = [
-  { icon: HomeIcon, label: 'Dashboard', path: '/' },
   { icon: BookIcon, label: 'Idea Book', path: '/ideas' },
   { icon: WorkIcon, label: 'Work Desk', path: '/work' },
 ];
