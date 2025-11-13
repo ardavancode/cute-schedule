@@ -93,13 +93,13 @@ export default function Header({
   palette = defaultPalette,
 }) {
   const iconButtonStyle = (active = false) => ({
-    width: isMobile ? '36px' : '42px',
-    height: isMobile ? '36px' : '42px',
+    width: isMobile ? '32px' : '36px',
+    height: isMobile ? '32px' : '36px',
     borderRadius: '9999px',
-    border: '1px solid rgba(33, 78, 93, 0.22)',
+    border: '1px solid rgba(33, 78, 93, 0.15)',
     background: active
-      ? 'linear-gradient(145deg, rgba(3, 121, 113, 0.28) 0%, rgba(39, 93, 173, 0.32) 100%)'
-      : 'rgba(212, 245, 245, 0.92)',
+      ? 'rgba(3, 121, 113, 0.15)'
+      : 'rgba(255, 255, 255, 0.5)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -109,8 +109,8 @@ export default function Header({
     transition:
       'transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease',
     boxShadow: active
-      ? '0 18px 38px rgba(32, 78, 93, 0.28)'
-      : '0 12px 28px rgba(33, 78, 93, 0.18)',
+      ? '0 4px 12px rgba(3, 121, 113, 0.2)'
+      : '0 2px 8px rgba(33, 78, 93, 0.1)',
   });
 
   const resetIconButtonStyle = (element, active = false) => {
@@ -139,14 +139,13 @@ export default function Header({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: isMobile ? '0.75rem' : '1.25rem',
-          padding: isMobile ? '0.75rem 1rem' : '0.9rem 1.5rem',
-          borderRadius: '26px',
-          border: '1px solid rgba(3, 121, 113, 0.18)',
-          background:
-            'linear-gradient(125deg, rgba(212, 245, 245, 0.9) 0%, rgba(240, 234, 214, 0.92) 55%, rgba(39, 93, 173, 0.22) 100%)',
-          boxShadow: '0 28px 52px rgba(3, 121, 113, 0.25)',
-          backdropFilter: 'blur(28px)',
+          gap: isMobile ? '0.75rem' : '1rem',
+          padding: isMobile ? '0.5rem 0.875rem' : '0.625rem 1.25rem',
+          borderRadius: '20px',
+          border: '1px solid rgba(3, 121, 113, 0.15)',
+          background: 'rgba(212, 245, 245, 0.75)',
+          boxShadow: '0 8px 32px rgba(3, 121, 113, 0.15)',
+          backdropFilter: 'blur(20px)',
           transition: 'box-shadow 0.3s ease',
         }}
       >
@@ -163,9 +162,9 @@ export default function Header({
             aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
             style={iconButtonStyle(sidebarOpen)}
             onMouseEnter={(event) => {
-              event.currentTarget.style.transform = 'translateY(-2px)';
+              event.currentTarget.style.transform = 'translateY(-1px)';
               event.currentTarget.style.boxShadow =
-                '0 20px 40px rgba(3, 121, 113, 0.3)';
+                '0 4px 16px rgba(3, 121, 113, 0.25)';
             }}
             onMouseLeave={(event) =>
               resetIconButtonStyle(event.currentTarget, sidebarOpen)
@@ -176,16 +175,16 @@ export default function Header({
                 ×
               </span>
             ) : (
-              <MenuIcon size={isMobile ? 16 : 18} />
+              <MenuIcon size={isMobile ? 14 : 16} />
             )}
           </button>
 
           <span
             style={{
-              fontSize: isMobile ? '1rem' : '1.25rem',
+              fontSize: isMobile ? '0.875rem' : '1rem',
               fontWeight: 600,
               color: theme.colors.textPrimary,
-              letterSpacing: '0.05em',
+              letterSpacing: '0.02em',
             }}
           >
             Cute Schedule
@@ -206,15 +205,15 @@ export default function Header({
               aria-label={label}
               style={iconButtonStyle(false)}
               onMouseEnter={(event) => {
-                event.currentTarget.style.transform = 'translateY(-2px)';
+                event.currentTarget.style.transform = 'translateY(-1px)';
                 event.currentTarget.style.boxShadow =
-                  '0 18px 38px rgba(32, 78, 93, 0.28)';
+                  '0 4px 16px rgba(3, 121, 113, 0.2)';
               }}
               onMouseLeave={(event) =>
                 resetIconButtonStyle(event.currentTarget)
               }
             >
-              <Icon size={isMobile ? 16 : 18} />
+              <Icon size={isMobile ? 14 : 16} />
             </button>
           ))}
 
@@ -223,15 +222,15 @@ export default function Header({
             aria-label="Toggle theme"
             style={iconButtonStyle(false)}
             onMouseEnter={(event) => {
-              event.currentTarget.style.transform = 'translateY(-2px)';
+              event.currentTarget.style.transform = 'translateY(-1px)';
               event.currentTarget.style.boxShadow =
-                '0 18px 38px rgba(32, 78, 93, 0.28)';
+                '0 4px 16px rgba(3, 121, 113, 0.2)';
             }}
             onMouseLeave={(event) => resetIconButtonStyle(event.currentTarget)}
           >
             <svg
-              width={isMobile ? 16 : 18}
-              height={isMobile ? 16 : 18}
+              width={isMobile ? 14 : 16}
+              height={isMobile ? 14 : 16}
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -248,12 +247,13 @@ export default function Header({
             type="button"
             aria-label="View profile"
             style={{
-              width: isMobile ? '36px' : '42px',
-              height: isMobile ? '36px' : '42px',
+              width: isMobile ? '32px' : '36px',
+              height: isMobile ? '32px' : '36px',
               borderRadius: '50%',
-              border: '1px solid rgba(3, 121, 113, 0.18)',
+              border: '1px solid rgba(3, 121, 113, 0.2)',
               background: `linear-gradient(145deg, ${palette.emerald} 0%, ${palette.sapphire} 100%)`,
               color: '#FFFFFF',
+              fontSize: isMobile ? '0.65rem' : '0.75rem',
               fontWeight: 600,
               letterSpacing: '0.05em',
               display: 'flex',
@@ -262,17 +262,17 @@ export default function Header({
               cursor: 'pointer',
               transform: 'translateY(0)',
               transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-              boxShadow: '0 18px 32px rgba(3, 121, 113, 0.35)',
+              boxShadow: '0 2px 8px rgba(3, 121, 113, 0.25)',
             }}
             onMouseEnter={(event) => {
-              event.currentTarget.style.transform = 'translateY(-2px)';
+              event.currentTarget.style.transform = 'translateY(-1px)';
               event.currentTarget.style.boxShadow =
-                '0 22px 38px rgba(39, 93, 173, 0.42)';
+                '0 4px 16px rgba(3, 121, 113, 0.35)';
             }}
             onMouseLeave={(event) => {
               event.currentTarget.style.transform = 'translateY(0)';
               event.currentTarget.style.boxShadow =
-                '0 18px 32px rgba(3, 121, 113, 0.35)';
+                '0 2px 8px rgba(3, 121, 113, 0.25)';
             }}
           >
             YOU

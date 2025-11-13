@@ -1,179 +1,9 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
 import { theme } from '../../styles/theme';
 
-// Base Glow Card Component
-const GlowCard = ({
-  children,
-  glowColor = 'primary',
-  className = '',
-  transform,
-  hoverTransform,
-  onClick,
-  colorScheme,
-}) => {
-  const cardRef = useRef(null);
-  const innerRef = useRef(null);
-
-  useEffect(() => {
-    let animationFrameId;
-
-    const syncPointer = (e) => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-
-      animationFrameId = requestAnimationFrame(() => {
-        const { clientX: x, clientY: y } = e;
-        if (cardRef.current) {
-          cardRef.current.style.setProperty('--x', x.toFixed(2));
-          cardRef.current.style.setProperty('--xp', (x / window.innerWidth).toFixed(2));
-          cardRef.current.style.setProperty('--y', y.toFixed(2));
-          cardRef.current.style.setProperty('--yp', (y / window.innerHeight).toFixed(2));
-        }
-      });
-    };
-
-    document.addEventListener('pointermove', syncPointer);
-    return () => {
-      document.removeEventListener('pointermove', syncPointer);
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-    };
-  }, []);
-
-  const glowColorMap = {
-    primary: { base: 0, spread: 30 },
-    secondary: { base: 50, spread: 30 },
-  };
-
-  const { base, spread } = glowColorMap[glowColor] || glowColorMap.primary;
-
-  const defaultSchemes = {
-    primary: {
-      accent: theme.colors.primary,
-      surface: theme.colors.cardBackground,
-      border: theme.colors.primary,
-      highlight: 'rgba(255, 107, 107, 0.12)',
-      shadow: '0 8px 32px rgba(108, 140, 255, 0.18)',
-      text: theme.colors.textSecondary,
-    },
-    secondary: {
-      accent: theme.colors.secondary,
-      surface: theme.colors.cardBackground,
-      border: theme.colors.secondary,
-      highlight: 'rgba(255, 217, 61, 0.12)',
-      shadow: '0 8px 32px rgba(255, 217, 61, 0.18)',
-      text: theme.colors.textSecondary,
-    },
-  };
-
-  const scheme = {
-    ...(defaultSchemes[glowColor] || defaultSchemes.primary),
-    ...(colorScheme || {}),
-  };
-
-  const surfaceColor = scheme.surface || theme.colors.cardBackground;
-  const highlightColor =
-    scheme.highlight ||
-    (glowColor === 'primary'
-      ? 'rgba(255, 107, 107, 0.12)'
-      : 'rgba(255, 217, 61, 0.12)');
-  const borderColor = scheme.border || defaultSchemes.primary.border;
-  const shadowColor = scheme.shadow || defaultSchemes.primary.shadow;
-
-  const cardStyle = {
-    '--base': base,
-    '--spread': spread,
-    '--radius': '16',
-    '--border': '2',
-    '--backdrop': surfaceColor,
-    '--backup-border': borderColor,
-    '--size': '120',
-    '--border-size': 'calc(var(--border, 2) * 1px)',
-    '--spotlight-size': 'calc(var(--size, 120) * 1px)',
-    '--hue': 'calc(var(--base) + (var(--xp, 0) * var(--spread, 0)))',
-    width: '320px',
-    height: '400px',
-    backgroundImage: `radial-gradient(
-      var(--spotlight-size) var(--spotlight-size) at
-      calc(var(--x, 0) * 1px)
-      calc(var(--y, 0) * 1px),
-      ${highlightColor}, transparent
-    )`,
-    backgroundColor: surfaceColor,
-    border: `2px solid ${borderColor}`,
-    borderRadius: '16px',
-    position: 'relative',
-    padding: '1.5rem',
-    boxShadow: shadowColor,
-    transform: transform,
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-    cursor: 'pointer',
-  };
-
-  const handleMouseEnter = () => {
-    if (cardRef.current && hoverTransform) {
-      cardRef.current.style.transform = hoverTransform;
-      cardRef.current.style.boxShadow = '0 12px 48px rgba(0,0,0,0.15)';
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (cardRef.current && transform) {
-      cardRef.current.style.transform = transform;
-      cardRef.current.style.boxShadow = '0 8px 32px rgba(0,0,0,0.1)';
-    }
-  };
-
-  return (
-    <>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-          [data-glow]::before {
-            content: "";
-            position: absolute;
-            inset: calc(var(--border-size) * -1);
-            border: var(--border-size) solid transparent;
-            border-radius: calc(var(--radius) * 1px);
-            background: radial-gradient(
-              calc(var(--spotlight-size) * 0.75) calc(var(--spotlight-size) * 0.75) at
-              calc(var(--x, 0) * 1px)
-              calc(var(--y, 0) * 1px),
-              hsl(var(--hue, 210) 100% 50% / 1), transparent 100%
-            );
-            background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
-            background-position: 50% 50%;
-            background-attachment: fixed;
-            mask: linear-gradient(transparent, transparent), linear-gradient(white, white);
-            mask-clip: padding-box, border-box;
-            mask-composite: intersect;
-            pointer-events: none;
-            filter: brightness(1.5);
-          }
-        `,
-        }}
-      />
-      <div
-        ref={cardRef}
-        data-glow
-        style={cardStyle}
-        className={className}
-        onClick={onClick}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        <div ref={innerRef} data-glow style={{ position: 'absolute', inset: 0, opacity: 0.8, borderRadius: '14px' }} />
-        {children}
-      </div>
-    </>
-  );
-};
-
-// Main Cute Glow Card Component
 export default function CuteGlowCard({
   title,
   description,
@@ -181,28 +11,152 @@ export default function CuteGlowCard({
   glowColor,
   onClick,
   onAddItem,
-  transform,
-  hoverTransform,
   cardPalette,
 }) {
+  const cardRef = useRef(null);
+  const glowRef = useRef(null);
+  const contentRef = useRef(null);
+  const iconRef = useRef(null);
+
   const accentColor =
     (cardPalette && cardPalette.accent) ||
     (glowColor === 'primary' ? theme.colors.primary : theme.colors.secondary);
-  const secondaryText =
-    (cardPalette && cardPalette.text) || theme.colors.textSecondary;
-  const buttonTextColor =
-    (cardPalette && cardPalette.buttonText) || theme.colors.background;
-  const buttonShadow =
-    (cardPalette && cardPalette.buttonShadow) || `${accentColor}40`;
+  const surfaceColor = (cardPalette && cardPalette.surface) || theme.colors.cardBackground;
+  const borderColor = (cardPalette && cardPalette.border) || accentColor;
+  const shadowColor = (cardPalette && cardPalette.shadow) || '0 8px 32px rgba(0,0,0,0.15)';
+  const secondaryText = (cardPalette && cardPalette.text) || theme.colors.textSecondary;
+  const buttonTextColor = (cardPalette && cardPalette.buttonText) || theme.colors.background;
+
+  useEffect(() => {
+    const card = cardRef.current;
+    const glow = glowRef.current;
+    const content = contentRef.current;
+
+    if (!card || !glow || !content) return;
+
+    // Initial fade in animation on mount
+    gsap.fromTo(card,
+      {
+        opacity: 0,
+        scale: 0.95,
+      },
+      {
+        opacity: 1,
+        scale: 1,
+        duration: 0.5,
+        ease: 'power2.out',
+      }
+    );
+
+    // Mouse move effect - only move the glow
+    const handleMouseMove = (e) => {
+      if (!card || !glow) return;
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      gsap.to(glow, {
+        x: (x - centerX) * 0.5,
+        y: (y - centerY) * 0.5,
+        duration: 0.3,
+        ease: 'power2.out',
+      });
+    };
+
+    const handleMouseLeave = () => {
+      gsap.to(glow, {
+        x: 0,
+        y: 0,
+        duration: 0.4,
+        ease: 'power2.out',
+      });
+    };
+
+    const handleMouseEnter = () => {
+      gsap.to(card, {
+        scale: 1.03,
+        boxShadow: '0 12px 40px rgba(0,0,0,0.18)',
+        duration: 0.3,
+        ease: 'power2.out',
+      });
+
+      if (iconRef.current) {
+        gsap.to(iconRef.current, {
+          scale: 1.1,
+          duration: 0.3,
+          ease: 'back.out(2)',
+        });
+      }
+    };
+
+    const handleMouseLeaveScale = () => {
+      gsap.to(card, {
+        scale: 1,
+        boxShadow: shadowColor,
+        duration: 0.3,
+        ease: 'power2.out',
+      });
+
+      if (iconRef.current) {
+        gsap.to(iconRef.current, {
+          scale: 1,
+          duration: 0.3,
+          ease: 'power2.out',
+        });
+      }
+    };
+
+    card.addEventListener('mousemove', handleMouseMove);
+    card.addEventListener('mouseleave', handleMouseLeave);
+    card.addEventListener('mouseenter', handleMouseEnter);
+    card.addEventListener('mouseleave', handleMouseLeaveScale);
+
+    return () => {
+      card.removeEventListener('mousemove', handleMouseMove);
+      card.removeEventListener('mouseleave', handleMouseLeave);
+      card.removeEventListener('mouseenter', handleMouseEnter);
+      card.removeEventListener('mouseleave', handleMouseLeaveScale);
+    };
+  }, [shadowColor]);
+
+  const cardStyle = {
+    width: '280px',
+    height: '320px',
+    backgroundColor: surfaceColor,
+    border: `2px solid ${borderColor}`,
+    borderRadius: '20px',
+    position: 'relative',
+    padding: '1.5rem',
+    boxShadow: shadowColor,
+    cursor: 'pointer',
+    overflow: 'hidden',
+  };
 
   return (
-    <GlowCard
-      glowColor={glowColor}
-      transform={transform}
-      hoverTransform={hoverTransform}
-      onClick={onClick}
-    >
+    <div ref={cardRef} style={cardStyle} onClick={onClick}>
+      {/* Animated Glow Background */}
       <div
+        ref={glowRef}
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: '200%',
+          height: '200%',
+          transform: 'translate(-50%, -50%)',
+          background: `radial-gradient(circle, ${accentColor}35 0%, ${accentColor}15 30%, transparent 60%)`,
+          opacity: 0.6,
+          pointerEvents: 'none',
+          borderRadius: '50%',
+          filter: 'blur(60px)',
+        }}
+      />
+
+      {/* Content */}
+      <div
+        ref={contentRef}
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -218,74 +172,92 @@ export default function CuteGlowCard({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: '1.25rem',
+            marginBottom: '1rem',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             {icon && (
               <div
+                ref={iconRef}
                 style={{
-                  width: '28px',
-                  height: '28px',
+                  width: '32px',
+                  height: '32px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: accentColor,
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
                 }}
               >
                 {icon}
               </div>
             )}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
               <div
                 style={{
-                  width: '48px',
+                  width: '40px',
                   height: '3px',
                   borderRadius: '9999px',
                   background: accentColor,
-                  opacity: 0.35,
+                  opacity: 0.5,
                 }}
               />
               <h3
                 style={{
-                  fontSize: '1.45rem',
+                  fontSize: '1.35rem',
                   fontWeight: '600',
                   margin: 0,
                   color: theme.colors.textPrimary,
-                  letterSpacing: '-0.01em',
+                  letterSpacing: '-0.02em',
                 }}
               >
                 {title}
               </h3>
             </div>
           </div>
-          <button
-            onClick={onAddItem}
-            style={{
-              width: '2.5rem',
-              height: '2.5rem',
-              borderRadius: '50%',
-              border: 'none',
-              background: accentColor,
-              color: buttonTextColor,
-              cursor: 'pointer',
-              fontSize: '1.25rem',
-              fontWeight: 'bold',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-              boxShadow: buttonShadow,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.08)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            +
-          </button>
+
+          {onAddItem && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddItem();
+              }}
+              style={{
+                width: '2.5rem',
+                height: '2.5rem',
+                borderRadius: '50%',
+                border: 'none',
+                background: accentColor,
+                color: buttonTextColor,
+                cursor: 'pointer',
+                fontSize: '1.25rem',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: `0 4px 12px ${accentColor}40`,
+                transition: 'transform 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                gsap.to(e.currentTarget, {
+                  scale: 1.1,
+                  rotation: 90,
+                  duration: 0.3,
+                  ease: 'back.out(2)',
+                });
+              }}
+              onMouseLeave={(e) => {
+                gsap.to(e.currentTarget, {
+                  scale: 1,
+                  rotation: 0,
+                  duration: 0.3,
+                  ease: 'power2.out',
+                });
+              }}
+            >
+              +
+            </button>
+          )}
         </div>
 
         {/* Description */}
@@ -300,17 +272,43 @@ export default function CuteGlowCard({
         >
           <p
             style={{
-              fontSize: '1rem',
+              fontSize: '0.95rem',
               color: secondaryText,
               lineHeight: '1.6',
-              maxWidth: '250px',
+              maxWidth: '220px',
+              margin: 0,
             }}
           >
             {description}
           </p>
         </div>
 
+        {/* Decorative elements */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '1rem',
+            right: '1rem',
+            width: '60px',
+            height: '60px',
+            borderRadius: '50%',
+            background: `radial-gradient(circle, ${accentColor}15 0%, transparent 70%)`,
+            pointerEvents: 'none',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            top: '1rem',
+            left: '1rem',
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            background: `radial-gradient(circle, ${accentColor}10 0%, transparent 70%)`,
+            pointerEvents: 'none',
+          }}
+        />
       </div>
-    </GlowCard>
+    </div>
   );
 }

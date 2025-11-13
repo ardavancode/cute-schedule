@@ -9,7 +9,13 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --check .",
-    "prepare": "husky install"
+    "format:fix": "prettier --write .",
+    "prepare": "husky install",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
   },
   "keywords": [],
   "author": "",

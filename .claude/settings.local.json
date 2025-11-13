@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(del jsconfig.json)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint:*)",
+      "Bash(gh --version:*)",
+      "Bash(git --version)",
+      "Bash(npm run dev:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
