@@ -10,8 +10,10 @@ export default function CuteGlowCard({
   icon,
   glowColor,
   onClick,
-  onAddItem,
+  onAddItem = null,
   cardPalette,
+  transform,
+  hoverTransform,
 }) {
   const cardRef = useRef(null);
   const glowRef = useRef(null);
@@ -78,6 +80,7 @@ export default function CuteGlowCard({
       gsap.to(card, {
         scale: 1.03,
         boxShadow: '0 12px 40px rgba(0,0,0,0.18)',
+        ...(hoverTransform ? { transform: hoverTransform } : {}),
         duration: 0.3,
         ease: 'power2.out',
       });
@@ -95,6 +98,7 @@ export default function CuteGlowCard({
       gsap.to(card, {
         scale: 1,
         boxShadow: shadowColor,
+        ...(transform ? { transform } : {}),
         duration: 0.3,
         ease: 'power2.out',
       });
@@ -132,6 +136,7 @@ export default function CuteGlowCard({
     boxShadow: shadowColor,
     cursor: 'pointer',
     overflow: 'hidden',
+    ...(transform ? { transform } : {}),
   };
 
   return (

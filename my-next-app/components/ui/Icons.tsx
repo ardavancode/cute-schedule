@@ -1,6 +1,10 @@
-// Icon Components for Cute Schedule
+import React from 'react';
 
-export const BookIcon = ({ size = 32, className, style }) => (
+interface IconProps extends React.SVGProps<SVGSVGElement> {
+  size?: number | string;
+}
+
+export const BookIcon: React.FC<IconProps> = ({ size = 32, className, style, ...props }) => (
   <svg 
     width={size} 
     height={size} 
@@ -9,6 +13,7 @@ export const BookIcon = ({ size = 32, className, style }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     style={style}
+    {...props}
   >
     <path 
       d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" 
@@ -27,7 +32,7 @@ export const BookIcon = ({ size = 32, className, style }) => (
   </svg>
 );
 
-export const WorkIcon = ({ size = 32, className, style }) => (
+export const WorkIcon: React.FC<IconProps> = ({ size = 32, className, style, ...props }) => (
   <svg 
     width={size} 
     height={size} 
@@ -36,6 +41,7 @@ export const WorkIcon = ({ size = 32, className, style }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     style={style}
+    {...props}
   >
     <path 
       d="M10.293 2.293a1 1 0 0 1 1.414 0l2.5 2.5 5.994 1.227a1 1 0 0 1 .506 1.687l-7 7a1 1 0 0 1-1.687-.506l-1.227-5.994-2.5-2.5a1 1 0 0 1 0-1.414z" 
@@ -68,7 +74,7 @@ export const WorkIcon = ({ size = 32, className, style }) => (
   </svg>
 );
 
-export const StarIcon = ({ size = 16, className, style }) => (
+export const StarIcon: React.FC<IconProps> = ({ size = 16, className, style, ...props }) => (
   <svg 
     width={size} 
     height={size} 
@@ -77,12 +83,13 @@ export const StarIcon = ({ size = 16, className, style }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     style={style}
+    {...props}
   >
     <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
   </svg>
 );
 
-export const MenuIcon = ({ size = 20, className, style }) => (
+export const MenuIcon: React.FC<IconProps> = ({ size = 20, className, style, ...props }) => (
   <svg 
     width={size} 
     height={size} 
@@ -91,6 +98,7 @@ export const MenuIcon = ({ size = 20, className, style }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     style={style}
+    {...props}
   >
     <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
     <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
@@ -98,7 +106,7 @@ export const MenuIcon = ({ size = 20, className, style }) => (
   </svg>
 );
 
-export const HomeIcon = ({ size = 20, className, style }) => (
+export const HomeIcon: React.FC<IconProps> = ({ size = 20, className, style, ...props }) => (
   <svg 
     width={size} 
     height={size} 
@@ -107,13 +115,14 @@ export const HomeIcon = ({ size = 20, className, style }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     style={style}
+    {...props}
   >
     <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     <polyline points="9,22 9,12 15,12 15,22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
-export const QuestionIcon = ({ size = 20, className, style }) => (
+export const QuestionIcon: React.FC<IconProps> = ({ size = 20, className, style, ...props }) => (
   <svg 
     width={size} 
     height={size} 
@@ -122,6 +131,7 @@ export const QuestionIcon = ({ size = 20, className, style }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     style={style}
+    {...props}
   >
     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -129,7 +139,7 @@ export const QuestionIcon = ({ size = 20, className, style }) => (
   </svg>
 );
 
-export const TimerIcon = ({ size = 20, className, style }) => (
+export const TimerIcon: React.FC<IconProps> = ({ size = 20, className, style, ...props }) => (
   <svg 
     width={size} 
     height={size} 
@@ -138,6 +148,7 @@ export const TimerIcon = ({ size = 20, className, style }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     style={style}
+    {...props}
   >
     <circle cx="12" cy="13" r="8" stroke="currentColor" strokeWidth="2"/>
     <path d="M12 9v4l2 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -145,7 +156,7 @@ export const TimerIcon = ({ size = 20, className, style }) => (
   </svg>
 );
 
-export const NotesIcon = ({ size = 20, className, style }) => (
+export const NotesIcon: React.FC<IconProps> = ({ size = 20, className, style, ...props }) => (
   <svg 
     width={size} 
     height={size} 
@@ -154,6 +165,7 @@ export const NotesIcon = ({ size = 20, className, style }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     style={style}
+    {...props}
   >
     <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     <polyline points="14,2 14,8 20,8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -162,7 +174,7 @@ export const NotesIcon = ({ size = 20, className, style }) => (
   </svg>
 );
 
-export const CalendarIcon = ({ size = 20, className, style }) => (
+export const CalendarIcon: React.FC<IconProps> = ({ size = 20, className, style, ...props }) => (
   <svg
     width={size}
     height={size}
@@ -171,6 +183,7 @@ export const CalendarIcon = ({ size = 20, className, style }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     style={style}
+    {...props}
   >
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" strokeWidth="2"/>
     <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
@@ -179,7 +192,7 @@ export const CalendarIcon = ({ size = 20, className, style }) => (
   </svg>
 );
 
-export const SearchIcon = ({ size = 18, className, style }) => (
+export const SearchIcon: React.FC<IconProps> = ({ size = 18, className, style, ...props }) => (
   <svg
     width={size}
     height={size}
@@ -192,13 +205,14 @@ export const SearchIcon = ({ size = 18, className, style }) => (
     strokeLinejoin="round"
     className={className}
     style={style}
+    {...props}
   >
     <circle cx="11" cy="11" r="6.5" />
     <path d="m20 20-3.4-3.4" />
   </svg>
 );
 
-export const PlannerIcon = ({ size = 18, className, style }) => (
+export const PlannerIcon: React.FC<IconProps> = ({ size = 18, className, style, ...props }) => (
   <svg
     width={size}
     height={size}
@@ -211,6 +225,7 @@ export const PlannerIcon = ({ size = 18, className, style }) => (
     strokeLinejoin="round"
     className={className}
     style={style}
+    {...props}
   >
     <rect x="3.5" y="5" width="17" height="15" rx="2.5" />
     <path d="M8 3.5v3" />
@@ -220,7 +235,7 @@ export const PlannerIcon = ({ size = 18, className, style }) => (
   </svg>
 );
 
-export const BellIcon = ({ size = 18, className, style }) => (
+export const BellIcon: React.FC<IconProps> = ({ size = 18, className, style, ...props }) => (
   <svg
     width={size}
     height={size}
@@ -233,13 +248,14 @@ export const BellIcon = ({ size = 18, className, style }) => (
     strokeLinejoin="round"
     className={className}
     style={style}
+    {...props}
   >
     <path d="M18.5 16.5H5.5l1-1.5a5 5 0 0 0 .9-2.9V10a5.6 5.6 0 0 1 11.2 0v2.1a5 5 0 0 0 .9 2.9l1 1.5Z" />
     <path d="M10 18.5a2 2 0 0 0 4 0" />
   </svg>
 );
 
-export const MoonIcon = ({ size = 18, className, style }) => (
+export const MoonIcon: React.FC<IconProps> = ({ size = 18, className, style, ...props }) => (
   <svg
     width={size}
     height={size}
@@ -252,6 +268,7 @@ export const MoonIcon = ({ size = 18, className, style }) => (
     strokeLinejoin="round"
     className={className}
     style={style}
+    {...props}
   >
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
   </svg>
