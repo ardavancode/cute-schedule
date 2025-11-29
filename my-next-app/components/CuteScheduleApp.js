@@ -1,16 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { palette, cardPalettes } from '../styles/palettes';
+import { useIsMobile } from '../lib/hooks/useIsMobile';
+import { headerActions } from '../lib/config/headerConfig';
 import {
   BookIcon,
   WorkIcon,
   QuestionIcon,
-  SearchIcon,
-  PlannerIcon,
-  BellIcon,
 } from './ui/Icons';
 
 // Dynamic imports for better performance and code splitting
@@ -32,21 +31,9 @@ const CuteGradientBackground = dynamic(() => import('./ui/CuteGradientBackground
 
 export default function CuteScheduleApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
   const router = useRouter();
   const pathname = usePathname();
-
-  // Check for mobile screen size
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   // Navigation handlers
   const handleNavigateToIdeas = () => {
@@ -61,13 +48,6 @@ export default function CuteScheduleApp() {
     router.push(path);
     setSidebarOpen(false);
   };
-
-  // Header actions configuration
-  const headerActions = [
-    { label: 'Search schedule', Icon: SearchIcon },
-    { label: 'Daily planner', Icon: PlannerIcon },
-    { label: 'Notifications', Icon: BellIcon }
-  ];
 
   return (
     <div

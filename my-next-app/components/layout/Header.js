@@ -1,77 +1,7 @@
 'use client';
 
 import { theme } from '../../styles/theme';
-
-const MenuIcon = ({ size = 20 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    stroke="currentColor"
-    strokeWidth={1.6}
-    strokeLinecap="round"
-  >
-    <path d="M4 7h16" />
-    <path d="M7 12h13" />
-    <path d="M4 17h16" />
-  </svg>
-);
-
-const SearchIcon = ({ size = 18 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    stroke="currentColor"
-    strokeWidth={1.8}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <circle cx="11" cy="11" r="6.5" />
-    <path d="m20 20-3.4-3.4" />
-  </svg>
-);
-
-const CalendarIcon = ({ size = 18 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    stroke="currentColor"
-    strokeWidth={1.6}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="3.5" y="5" width={17} height={15} rx={2.5} />
-    <path d="M8 3.5v3" />
-    <path d="M16 3.5v3" />
-    <path d="M3.5 10h17" />
-    <path d="M9 14h6" />
-  </svg>
-);
-
-const BellIcon = ({ size = 18 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    stroke="currentColor"
-    strokeWidth={1.6}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M18.5 16.5H5.5l1-1.5a5 5 0 0 0 .9-2.9V10a5.6 5.6 0 0 1 11.2 0v2.1a5 5 0 0 0 .9 2.9l1 1.5Z" />
-    <path d="M10 18.5a2 2 0 0 0 4 0" />
-  </svg>
-);
+import { MenuIcon, SearchIcon, CalendarIcon, BellIcon, MoonIcon } from '../ui/Icons';
 
 const defaultPalette = {
   emerald: '#037971',
@@ -228,19 +158,7 @@ export default function Header({
             }}
             onMouseLeave={(event) => resetIconButtonStyle(event.currentTarget)}
           >
-            <svg
-              width={isMobile ? 14 : 16}
-              height={isMobile ? 14 : 16}
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              stroke="currentColor"
-              strokeWidth={1.6}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
-            </svg>
+            <MoonIcon size={isMobile ? 14 : 16} />
           </button>
 
           <button
